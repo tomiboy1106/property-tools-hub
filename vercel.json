@@ -31,11 +31,10 @@
       }
     },
     {
-      "handle": "filesystem"
+    
     },
     {
-      "src": "/(.*)",
-      "dest": "/homepage/$1"
+      "handle": "filesystem"
     }
   ]
 }

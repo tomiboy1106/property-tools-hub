@@ -16,6 +16,8 @@
 - `/buyer-budget/`
 - `/seller-net/`
 
+`homepage/` 僅為 Repository 內的原始碼目錄名稱，不會出現在公開網址中。根網址 `/` 直接由 Next.js Homepage 提供。
+
 Homepage 僅使用網址導向工具，不讀取或修改工具內部程式。
 
 ## Homepage 本機開發
