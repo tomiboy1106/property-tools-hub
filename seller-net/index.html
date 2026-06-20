@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>售屋稅務試算工具</title>
+    <meta name="description" content="岠鋐不動產事業Ryan製作" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:title" content="售屋稅務試算工具" />
+    <meta property="og:description" content="岠鋐不動產事業Ryan製作" />
+    <meta property="og:image" content="./assets/share-preview.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="售屋稅務試算工具" />
+    <meta name="twitter:description" content="岠鋐不動產事業Ryan製作" />
+    <meta name="twitter:image" content="./assets/share-preview.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="workspace" aria-label="售屋稅務試算工具">
+        <header class="topbar">
+          <p class="eyebrow">JU HONG TEAM</p>
+          <h1>售屋稅務試算工具</h1>
+          <div class="tax-tabs" role="tablist" aria-label="稅務試算類型">
+            <button class="active" type="button" data-tax-tab="houseLand">房地合一稅</button>
+            <button type="button" data-tax-tab="propertyIncome">財產交易所得稅</button>
+          </div>
+        </header>
+
+        <section class="tax-view active" id="houseLandView" aria-label="房地合一稅試算">
+          <div class="layout">
+            <form class="panel form-panel" id="taxForm">
+              <div class="section-head">
+                <div>
+                  <p class="section-kicker">房地合一稅</p>
+                  <h2>試算資料</h2>
+                </div>
+                <button class="ghost-button" type="button" id="resetButton" title="清除所有欄位">↻</button>
+              </div>
+
+              <div class="grid two">
+                <label class="field">
+                  <span>身分別</span>
+                  <select id="residentType">
+                    <option value="resident">中華民國境內居住者</option>
+                    <option value="nonResident">非中華民國境內居住者</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>適用情境</span>
+                  <select id="scenario">
+                    <option value="general">一般稅率</option>
+                    <option value="selfUse">自住優惠稅率</option>
+                    <option value="special20">特殊情形 / 20% 稅率</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">
+                  <span>01</span>
+                  <h3>買賣日期</h3>
+                </div>
+                <div class="date-block">
+                  <div class="field">
+                    <span>取得日期（民國年月日）</span>
+                    <div class="roc-date">
+                      <select id="buyYear" class="clearable" aria-label="取得年"></select>
+                      <select id="buyMonth" class="clearable" aria-label="取得月"></select>
+                      <select id="buyDay" class="clearable" aria-label="取得日"></select>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <span>出售日期（民國年月日）</span>
+                    <div class="roc-date">
+                      <select id="sellYear" class="clearable" aria-label="出售年"></select>
+                      <select id="sellMonth" class="clearable" aria-label="出售月"></select>
+                      <select id="sellDay" class="clearable" aria-label="出售日"></select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="self-use-checks self-use-confirm-box">
+                <div class="self-use-title">
+                  <span>自住優惠</span>
+                  <h3>自住稅率資格確認</h3>
+                </div>
+                <div class="field self-use-registry-field">
+                  <span>設籍日期（民國年月日）</span>
+                  <div class="roc-date">
+                    <select id="registryYear" class="clearable" aria-label="設籍年"></select>
+                    <select id="registryMonth" class="clearable" aria-label="設籍月"></select>
+                    <select id="registryDay" class="clearable" aria-label="設籍日"></select>
+                  </div>
+                </div>
+                <div class="self-use-options">
+                  <label class="check-field">
+                    <input id="hasRegistryResidence" class="clearable" type="checkbox" />
+                    <span>有設籍居住事實</span>
+                  </label>
+                  <label class="check-field">
+                    <input id="noRental" class="clearable" type="checkbox" />
+                    <span>無出租</span>
+                  </label>
+                  <label class="check-field">
+                    <input id="noBusinessUse" class="clearable" type="checkbox" />
+                    <span>無營業登記或事實</span>
+                  </label>
+                </div>
+                <p class="self-use-warning-note">
+                  ⚠ 警告：須同時符合本人、配偶或未成年子女設籍滿六年；持有並居住期間無出租、無營業登記；出售前六年內僅得適用一次。
+                </p>
+                <p id="selfUseAutoNote" class="self-use-note" hidden>
+                  已符合自住稅率資格，可套用400萬免稅額與10%稅率。
+                </p>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">
+                  <span>02</span>
+                  <h3>成交與細項成本資料</h3>
+                </div>
+                <div class="grid two">
+                  <label class="field">
+                    <span>出售成交價（萬元）</span>
+                    <input id="salePriceWan" class="clearable" type="number" inputmode="decimal" min="0" step="1" />
+                  </label>
+                  <label class="field">
+                    <span>取得成本（萬元）</span>
+                    <input id="acquisitionCostWan" class="clearable" type="number" inputmode="decimal" min="0" step="1" />
+                  </label>
+                  <label class="field">
+                    <span>土地漲價總數額（元）</span>
+                    <input id="landValueIncrement" class="clearable" type="number" inputmode="numeric" min="0" step="10000" />
+                  </label>
+</div>
+              </div>
+
+              <div class="expense-box">
+                <div class="section-head compact">
+                  <div>
+                    <p class="section-kicker">可減除項目</p>
+                    <h2>成本與必要費用</h2>
+                  </div>
+                </div>
+                <div class="expense-category actual-only">
+                  <h3>出售時成本</h3>
+                  <div class="grid three">
+                    <label class="field">
+                      <span>代書費（元）</span>
+                      <input id="scrivenerFee" class="clearable" type="number" inputmode="numeric" min="0" step="1000" />
+                    </label>
+                    <label class="field">
+                      <span>廣告費（元）</span>
+                      <input id="advertisingFee" class="clearable" type="number" inputmode="numeric" min="0" step="1000" />
+                    </label>
+                    <label class="field">
+                      <span>出售時仲介費（元）</span>
+                      <input id="brokerageFee" class="clearable" type="number" inputmode="numeric" min="0" step="1000" />
+                    </label>
+                  </div>
+                </div>
+                <div class="expense-category">
+                  <h3>購買時成本</h3>
+                  <div class="grid three">
+                    <label class="field">
+                      <span>契稅（元）</span>
+                      <input id="deedTax" class="clearable" type="number" inputmode="numeric" min="0" step="1000" />
+                    </label>
+                    <label class="field">
+                      <span>印花稅（元）</span>
+                      <input id="stampTax" class="clearable" type="number" inputmode="numeric" min="0" step="1000" />
+                    </label>
+                    <label class="field">
+                      <span>規費（元）</span>
+                      <input id="registrationFee" class="clearable" type="number" inputmode="numeric" min="0" step="1000" />
+                    </label>
+                    <label class="field">
+                      <span>購買時仲介費（元）</span>
+                      <input id="purchaseBrokerageFee" class="clearable" type="number" inputmode="numeric" min="0" step="1000" />
+                    </label>
+                  </div>
+                </div>
+                <div class="grid two">
+                  <label class="field">
+                    <span>改良與裝修成本（元）</span>
+                    <input id="improvementCost" class="clearable" type="number" inputmode="numeric" min="0" step="10000" />
+                  </label>
+                  <label class="field">
+                    <span>其他可列成本（元）</span>
+                    <input id="otherCost" class="clearable" type="number" inputmode="numeric" min="0" step="10000" />
+                  </label>
+                </div>
+              </div>
+
+              <details class="settings">
+                <summary>進階參數</summary>
+                <div class="grid two">
+                  <label class="field">
+                    <span>自住免稅額（元）</span>
+                    <input id="selfUseExemption" class="clearable" type="number" min="0" step="10000" placeholder="預設 4000000" />
+                  </label>
+                  <label class="field">
+                    <span>自住優惠稅率 %</span>
+                    <input id="selfUseRate" class="clearable" type="number" min="0" step="1" placeholder="預設 10" />
+                  </label>
+                  <label class="field">
+                    <span>特殊稅率 %</span>
+                    <input id="specialRate" class="clearable" type="number" min="0" step="1" placeholder="預設 20" />
+                  </label>
+                  <input id="estimatedExpenseRate" class="clearable hidden-setting" type="hidden" value="" />
+                  <input id="estimatedExpenseCap" class="clearable hidden-setting" type="hidden" value="" />
+                </div>
+              </details>
+            </form>
+
+            <section class="panel detail-panel">
+              <div class="breakdown">
+                <h2>試算明細</h2>
+                <dl id="breakdownList"></dl>
+              </div>
+
+              <div class="brackets">
+                <h2>一般稅率參考</h2>
+                <div id="rateList"></div>
+              </div>
+            </section>
+
+            <aside class="panel result-panel" aria-live="polite">
+              <div class="result-main">
+                <span>預估房地合一稅</span>
+                <strong id="taxDue">$0</strong>
+                <p id="resultNote">輸入資料後即時更新</p>
+              </div>
+
+              <div class="metric-grid house-result-metrics">
+                <div>
+                  <span>交易獲利</span>
+                  <strong id="taxableIncome">$0</strong>
+                </div>
+                <div>
+                  <span>持有期間</span>
+                  <strong id="holdingPeriod">0 個月</strong>
+                </div>
+                <div>
+                  <span>適用稅率</span>
+                  <strong id="taxRate">0%</strong>
+                </div>
+</div>
+
+              <div class="result-actions">
+                <button class="action-button pdf-button" type="button" id="pdfButton">
+                  <span class="pdf-mark">PDF</span>
+                  <span>生成PDF檔案</span>
+                </button>
+                <a class="action-button line-button" href="https://lin.ee/vU2UYc9" target="_blank" rel="noopener">
+                  <span class="line-mark">LINE</span>
+                  <span>加官方LINE諮詢</span>
+                </a>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="tax-view" id="propertyIncomeView" aria-label="財產交易所得稅試算" hidden>
+          <div class="property-layout">
+            <form class="panel form-panel property-panel" id="propertyIncomeForm">
+              <div class="section-head">
+                <div>
+                  <p class="section-kicker">財產交易所得稅</p>
+                  <h2>房屋資料</h2>
+                </div>
+              </div>
+
+              <div class="grid two">
+                <label class="field">
+                  <span>縣市</span>
+                  <select id="propertyCity"></select>
+                </label>
+                <label class="field">
+                  <span>地區</span>
+                  <select id="propertyDistrict"></select>
+                </label>
+              </div>
+
+              <label class="field full-field">
+                <span>完整地址</span>
+                <input id="propertyAddress" class="clearable" type="text" autocomplete="street-address" placeholder="請輸入正確地址" />
+              </label>
+
+              <div class="grid two">
+                <label class="field">
+                  <span>預計成交價格（萬元）</span>
+                  <input id="propertySalePriceWan" class="clearable" type="number" inputmode="decimal" min="0" step="1" />
+                </label>
+                <label class="field">
+                  <span>房屋評定現值（元）</span>
+                  <input id="propertyAssessedValue" class="clearable" type="number" inputmode="numeric" min="0" step="10000" />
+                </label>
+              </div>
+
+              <div class="date-block property-date-block">
+                <div class="field">
+                  <span>取得房屋日期（民國年月日）</span>
+                  <div class="roc-date">
+                    <select id="propertyAcquireYear" class="clearable" aria-label="取得年"></select>
+                    <select id="propertyAcquireMonth" class="clearable" aria-label="取得月"></select>
+                    <select id="propertyAcquireDay" class="clearable" aria-label="取得日"></select>
+                  </div>
+                </div>
+              </div>
+
+              <div id="newSystemWarning" class="warning-box new-system-warning" hidden>
+                <strong>注意：這筆交易可能適用房地合一稅新制</strong>
+                <span>若取得日在 105 年 1 月 1 日以後，原則上不適用本頁「財產交易所得稅」標準，請改用房地合一稅頁試算。</span>
+              </div>
+
+              <div id="luxuryWarning" class="warning-box luxury-warning" hidden>
+                <strong>已達高價房屋標準</strong>
+                <span id="luxuryWarningText"></span>
+              </div>
+            </form>
+
+            <aside class="panel result-panel property-result" aria-live="polite">
+              <div class="result-main property-result-main">
+                <span>財產交易所得標準</span>
+                <strong id="propertyRate">0%</strong>
+                <p id="propertyRateNote">請選擇縣市與地區。</p>
+              </div>
+
+              <div class="metric-grid">
+                <div>
+                  <span>高價房屋門檻</span>
+                  <strong id="luxuryThreshold">請先選擇縣市及地區</strong>
+                </div>
+                <div>
+                  <span>成交價格</span>
+                  <strong id="propertySalePrice">$0</strong>
+                </div>
+                <div>
+                  <span>推估財產交易所得</span>
+                  <strong id="propertyEstimatedIncome">$0</strong>
+                </div>
+                <div>
+                  <span>適用制度</span>
+                  <strong id="propertySystemStatus">待判斷</strong>
+                </div>
+              </div>
+
+              <div class="source-note">
+                依財政部稅務入口網「114年度個人出售房屋之財產交易所得計算規定」建置；本頁不適用房地合一稅範圍。
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <footer class="brand-footer" aria-label="品牌資訊">
+          <img class="brand-logo" src="./assets/logo-transparent.png" alt="岠鋐不動產事業有限公司 LOGO" />
+          <div class="brand-name">岠鋐不動產事業有限公司</div>
+          <div class="brand-call">如仍有疑問，歡迎來電洽詢(07)-7779365</div>
+        </footer>
+        <p class="legal-disclaimer">
+          ⚠ 法律免責聲明：本試算結果僅為初步估算參考利用，實際要繳納金額因不同情況會有所差異，要依您可提供扣抵的費用發票及單據或個人設籍及所得級距原因、可特殊扣抵項目，如：法規更改或國家稅務機關核定結果，也會不同。<br />
+          本試算未包含土地增值稅,需另外計算。<br />
+          正式報稅請洽：各所在縣市地區國稅局（0800-000321)或以聘僱之會計事務所查詢及詢問
+        </p>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
