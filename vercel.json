@@ -15,31 +15,26 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
+  "redirects": [
     {
-      "src": "/buyer-budget",
-      "status": 308,
-      "headers": {
-        "Location": "/buyer-budget/"
-      }
+      "source": "/buyer-budget",
+      "destination": "/buyer-budget/",
+      "permanent": true
     },
     {
-      "src": "/seller-net",
-      "status": 308,
-      "headers": {
-        "Location": "/seller-net/"
-      }
+      "source": "/seller-net",
+      "destination": "/seller-net/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/buyer-budget/",
+      "destination": "/buyer-budget/index.html"
     },
     {
-      "src": "/buyer-budget/",
-      "dest": "/buyer-budget/index.html"
-    },
-    {
-      "src": "/seller-net/",
-      "dest": "/seller-net/index.html"
-    },
-    {
-      "handle": "filesystem"
+      "source": "/seller-net/",
+      "destination": "/seller-net/index.html"
     }
   ]
 }
