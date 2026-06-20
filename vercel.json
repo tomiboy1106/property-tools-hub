@@ -29,6 +29,15 @@
       "headers": {
         "Location": "/seller-net/"
       }
+    },
+    {
+      "src": "/buyer-budget/",
+      "dest": "/buyer-budget/index.html"
+    },
+    {
+      "src": "/seller-net/",
+      "dest": "/seller-net/index.html"
+    },
     {
       "handle": "filesystem"
     }
