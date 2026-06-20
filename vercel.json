@@ -29,10 +29,6 @@
       "headers": {
         "Location": "/seller-net/"
       }
-    },
-    {
-    
-    },
     {
       "handle": "filesystem"
     }
