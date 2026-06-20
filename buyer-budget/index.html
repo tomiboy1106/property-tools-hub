@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffd110">
+  <title>自備款可購總價試算工具</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="brand-mark" aria-label="岠鋐不動產事業有限公司">
+        <img src="logo.png?v=4" alt="岠鋐不動產事業有限公司 Logo">
+      </div>
+      <div>
+        <p class="eyebrow">買房預算・快速掌握</p>
+        <h1>自備款可購總價<br class="mobile-break">試算工具</h1>
+        <p class="hero-copy">輸入自備款與貸款條件，立即估算可購屋總價、貸款金額及每月還款。</p>
+      </div>
+    </header>
+
+    <main>
+      <form id="calculator" class="calculator" novalidate>
+        <section class="panel input-panel">
+          <div class="section-heading">
+            <span class="step">01</span>
+            <div>
+              <p class="kicker">購屋條件</p>
+              <h2>先告訴我們您的預算</h2>
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <label class="field field-featured">
+              <span class="field-label">自備款金額</span>
+              <span class="input-wrap">
+                <input id="downPayment" type="number" min="0" step="1" value="0" inputmode="decimal">
+                <span class="unit">萬元</span>
+              </span>
+            </label>
+
+            <fieldset class="field identity-field">
+              <legend class="field-label">貸款人身分別</legend>
+              <div class="identity-options">
+                <label class="identity-card">
+                  <input type="radio" name="identity" value="0.8" checked>
+                  <span>
+                    <b>新青安首購</b>
+                    <small>最高貸款 8 成</small>
+                    <small class="identity-rate">利率 1.775% 起</small>
+                  </span>
+                </label>
+                <label class="identity-card">
+                  <input type="radio" name="identity" value="0.8">
+                  <span>
+                    <b>無房貸首購</b>
+                    <small>最高貸款 8 成</small>
+                    <small class="identity-rate">利率約 2.5–2.8%</small>
+                  </span>
+                </label>
+                <label class="identity-card">
+                  <input type="radio" name="identity" value="0.6">
+                  <span>
+                    <b>已有 1 戶房貸</b>
+                    <small>最高貸款 6 成</small>
+                  </span>
+                </label>
+                <label class="identity-card">
+                  <input type="radio" name="identity" value="0.3">
+                  <span>
+                    <b>已有 2 戶房貸</b>
+                    <small>最高貸款 3 成</small>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <label class="high-price-toggle">
+            <input id="highPrice" type="checkbox">
+            <span class="toggle-ui"></span>
+            <span>
+              <b>購置高總價住宅</b>
+              <small>勾選後不論身分別，貸款成數以 3 成試算</small>
+            </span>
+          </label>
+          <p class="high-price-threshold">⚠ 高價住宅門檻：臺北市 7,000 萬元、新北市 6,000 萬元、其他地區 4,000 萬元以上；實際認定依銀行鑑價及最新規定為準。</p>
+        </section>
+
+        <section class="panel loan-panel">
+          <div class="section-heading">
+            <span class="step">02</span>
+            <div>
+              <p class="kicker">貸款設定</p>
+              <h2>調整利率與貸款年限</h2>
+            </div>
+          </div>
+
+          <div class="loan-fields">
+            <label class="field">
+              <span class="field-label">年利率</span>
+              <span class="input-wrap">
+                <input id="interestRate" type="number" min="0" max="100" step="0.01" value="0" inputmode="decimal">
+                <span class="unit">%</span>
+              </span>
+            </label>
+            <label class="field">
+              <span class="field-label">貸款年限</span>
+              <span class="input-wrap">
+                <input id="loanYears" type="number" min="0" max="50" step="1" value="0" inputmode="numeric">
+                <span class="unit">年</span>
+              </span>
+            </label>
+          </div>
+          <p class="loan-age-warning">⚠ 基本房貸年限加上貸款人年齡，原則上不得超過 80 年；實際仍依各銀行審核標準為準。</p>
+          <div class="rate-note">
+            <span class="note-dot"></span>
+            <p>目前首購利率約為 <b>2.6–2.8%</b> 之間<br>實際利率依借款銀行端實際核定利率為主</p>
+          </div>
+        </section>
+
+        <section class="result-panel" aria-live="polite">
+          <div class="result-title">
+            <p class="kicker">您的試算結果</p>
+            <h2>依目前條件，預估可購屋總價</h2>
+          </div>
+          <div class="primary-result">
+            <span id="totalPrice">0</span>
+            <small>萬元</small>
+          </div>
+
+          <div class="result-grid">
+            <div class="result-item">
+              <span>預估貸款金額</span>
+              <strong><b id="loanAmount">0</b> 萬元</strong>
+            </div>
+            <div class="result-item monthly">
+              <span>每月本息攤還</span>
+              <strong>約 <b id="monthlyPayment">0</b> 元</strong>
+            </div>
+            <div class="result-item">
+              <span>適用貸款成數</span>
+              <strong><b id="loanRatio">80</b>%</strong>
+            </div>
+            <div class="result-item">
+              <span>預估總利息</span>
+              <strong><b id="totalInterest">0</b> 萬元</strong>
+            </div>
+          </div>
+          <p id="calculationHint" class="calculation-hint">請輸入自備款、年利率及貸款年限，即可完成月付金試算。</p>
+        </section>
+
+        <div class="actions">
+          <button id="resetButton" class="button button-secondary" type="button">
+            <span>↻</span> 重新計算
+          </button>
+          <button id="pdfButton" class="button button-primary" type="button">
+            <span>↓</span> 產出 PDF 檔案
+          </button>
+        </div>
+      </form>
+
+      <section class="rules">
+        <div class="section-heading compact">
+          <span class="step">i</span>
+          <div>
+            <p class="kicker">貸款成數說明</p>
+            <h2>不同持有狀況的試算依據</h2>
+          </div>
+        </div>
+        <div class="rule-grid">
+          <article><span class="rule-tag green">新青安</span><p>名下沒有房地產，最高寬限期為 5 年；利率為 1.775% 起。</p></article>
+          <article><span class="rule-tag green">無房貸</span><p>名下有房地產但無貸款，也可適用首購，但無寬限期。</p></article>
+          <article><span class="rule-tag yellow">1 戶房貸</span><p>名下有 1 戶房地產有貸款，貸款最高成數為 6 成。</p></article>
+          <article><span class="rule-tag red">2 戶房貸</span><p>名下有 2 戶房地產有貸款，貸款最高成數為 3 成。</p></article>
+          <article class="wide"><span class="rule-tag red">高總價住宅</span><p>購置超過各縣市高總價住宅總價限制，不論身分別皆以 3 成試算。</p></article>
+        </div>
+        <p class="new-home-warning">⚠ 新青安資格須依公股行庫辦理，實際認定結果仍需銀行端認定。</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="logo.png?v=4" alt="岠鋐不動產 Logo">
+        </div>
+        <div>
+          <strong>岠鋐不動產事業有限公司</strong>
+          <p>如仍有疑問，歡迎來電洽詢 <a href="tel:077779365">(07)-7779365</a></p>
+        </div>
+      </div>
+      <p class="disclaimer">本試算結果僅為初步估算參考，實際貸款成數、利率、額度、寬限期及相關費用，仍應以金融機構最終審核結果為準。各縣市高總價住宅認定標準可能調整，請依最新規定辦理。</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
