@@ -1,0 +1,41 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "builds": [
+    {
+      "src": "homepage/package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "buyer-budget/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "seller-net/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/buyer-budget",
+      "status": 308,
+      "headers": {
+        "Location": "/buyer-budget/"
+      }
+    },
+    {
+      "src": "/seller-net",
+      "status": 308,
+      "headers": {
+        "Location": "/seller-net/"
+      }
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/homepage/$1"
+    }
+  ]
+}
