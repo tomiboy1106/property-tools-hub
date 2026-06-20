@@ -321,3 +321,156 @@ footer { margin-top: 24px; overflow: hidden; color: white; background: #070707; 
   footer { margin-top: 12px; break-inside: avoid; }
   .footer-brand { padding: 18px; }
 }
+
+/* PDF result-first layout */
+@media print {
+  @page { size: A4 portrait; margin: 8mm; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  html, body { width: 100%; margin: 0; background: #fff; }
+  .page-shell { width: 100%; margin: 0; }
+
+  .hero {
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    min-height: 0;
+    padding: 10px 18px;
+    border-radius: 10px;
+    break-inside: avoid;
+  }
+  .hero::after { width: 105px; height: 105px; right: -22px; top: -48px; border-width: 15px; }
+  .brand-mark { width: 50px; height: 50px; box-shadow: 0 0 0 3px rgba(255,255,255,.08), 0 5px 10px rgba(0,0,0,.3); }
+  .brand-mark img { padding: 4px; filter: drop-shadow(1px 1px 0 #5f4c00) drop-shadow(2px 2px 2px rgba(0,0,0,.55)); }
+  .hero .eyebrow, .hero-copy { display: none; }
+  .hero h1 { margin: 0; font-size: 24px; letter-spacing: -.02em; }
+
+  main { gap: 8px; margin-top: 8px; }
+  .calculator { display: grid; grid-template-columns: 1.35fr .8fr; gap: 8px; }
+  .result-panel {
+    order: -10;
+    grid-column: 1 / -1;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  .result-panel::before { width: 210px; height: 210px; right: -65px; bottom: -125px; border-width: 34px; }
+  .result-title h2 { margin-top: 1px; font-size: 15px; }
+  .primary-result { margin: 3px 0 10px; }
+  .primary-result span { font-size: 52px; }
+  .primary-result small { font-size: 15px; }
+  .result-item { gap: 3px; padding: 8px 10px; }
+  .result-item span, .calculation-hint { font-size: 9px; }
+  .result-item strong { font-size: 12px; }
+  .result-item.monthly b { font-size: 17px; }
+  .calculation-hint { margin-top: 8px; }
+
+  .input-panel { order: 1; }
+  .loan-panel { order: 2; }
+  .panel, .rules { padding: 13px; border: 1px solid #e5e5e5; border-radius: 10px; box-shadow: none; }
+  .section-heading { gap: 8px; margin-bottom: 9px; }
+  .step { width: 28px; height: 28px; flex-basis: 28px; border-radius: 8px 8px 8px 3px; font-size: 11px; }
+  .section-heading h2 { font-size: 14px; }
+  .kicker { font-size: 8px; }
+  .field-grid, .loan-fields { gap: 8px; }
+  .field { gap: 3px; }
+  .field-label { font-size: 10px; }
+  .input-wrap input { height: 34px; padding: 0 43px 0 9px; border-width: 1px; border-radius: 7px; font-size: 15px; }
+  .unit { right: 9px; font-size: 9px; }
+  .identity-options { gap: 4px; }
+  .identity-card span { min-height: 45px; padding: 5px 7px; border-width: 1px; border-radius: 7px; }
+  .identity-card b { font-size: 9px; }
+  .identity-card small { margin-top: 1px; font-size: 7px; }
+  .high-price-toggle { gap: 7px; margin-top: 8px; padding: 7px; border-radius: 7px; }
+  .high-price-toggle b { font-size: 9px; }
+  .high-price-toggle small, .high-price-threshold, .loan-age-warning { font-size: 7px; }
+  .toggle-ui { width: 30px; height: 17px; flex-basis: 30px; }
+  .toggle-ui::after { width: 11px; height: 11px; }
+  .high-price-toggle input:checked + .toggle-ui::after { transform: translateX(13px); }
+  .rate-note { gap: 6px; margin-top: 8px; padding: 7px; border-radius: 7px; font-size: 8px; }
+  .note-dot { width: 6px; height: 6px; flex-basis: 6px; margin-top: 3px; }
+  .actions { display: none; }
+
+  .rules { padding: 11px 13px; break-inside: avoid; }
+  .rules .section-heading { margin-bottom: 7px; }
+  .rule-grid { gap: 4px; }
+  .rule-grid article { gap: 5px; padding: 6px; border-radius: 6px; }
+  .rule-grid p { font-size: 8px; }
+  .rule-tag { padding: 2px 5px; font-size: 7px; }
+  .new-home-warning { margin-top: 4px; font-size: 6px; }
+
+  footer { margin-top: 8px; border-radius: 8px; break-inside: avoid; }
+  .footer-brand { gap: 11px; padding: 9px; }
+  .footer-logo { width: 40px; height: 40px; flex-basis: 40px; }
+  .footer-logo img { width: 33px; height: 33px; }
+  .footer-brand strong { font-size: 10px; }
+  .footer-brand p { margin-top: 1px; font-size: 8px; }
+  .disclaimer { padding: 5px 9px; font-size: 6px; }
+}
+
+@media print {
+  .page-shell {
+    width: 106.4%;
+    zoom: .94;
+  }
+}
+
+/* Final single-page PDF refinements */
+@media print {
+  .page-shell {
+    width: 100%;
+    zoom: .91;
+  }
+
+  .calculator {
+    grid-template-columns: 1.2fr .8fr;
+  }
+
+  .identity-options {
+    display: block;
+  }
+
+  .identity-card {
+    display: none;
+  }
+
+  .identity-card:has(input:checked) {
+    display: block;
+    width: 100%;
+  }
+
+  .identity-card:has(input:checked) span {
+    min-height: 45px;
+  }
+
+  .loan-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .loan-panel .rate-note {
+    margin-top: 6px;
+  }
+
+  .rules {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
+  .rule-grid article {
+    min-height: 0;
+  }
+
+  footer {
+    margin-top: 6px;
+  }
+
+  .footer-brand {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+}
+
+@media print {
+  .page-shell { zoom: .97; }
+}
