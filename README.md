@@ -8,17 +8,17 @@
 
 ## Vercel 部署
 
-在 Vercel 建立一個 Project，Repository Root Directory 保持為專案根目錄，不要設定成 `homepage`。
+此 Repository 在 Vercel 使用三個獨立 Project。Homepage Project 的 **Root Directory 請設定為 `homepage`**。這是建置來源位置，不會出現在公開網址中；Homepage 公開網址仍然是 `/`。
 
-根目錄的 `vercel.json` 會分別建置 Next.js 首頁與兩個靜態工具，正式路徑為：
+三個 Project：
 
-- `/`
-- `/buyer-budget/`
-- `/seller-net/`
+- Homepage：網站根網址 `/`
+- Buyer Budget：`https://buyer-budget.vercel.app/`
+- Seller Net：`https://seller-net-calculator.vercel.app/`
 
-`homepage/` 僅為 Repository 內的原始碼目錄名稱，不會出現在公開網址中。根網址 `/` 直接由 Next.js Homepage 提供。
+根目錄不使用 `vercel.json` 路由或 rewrite，避免與 Next.js 自動路由產生循環。
 
-Homepage 僅使用網址導向工具，不讀取或修改工具內部程式。
+Homepage 僅使用上述公開網址導向工具，不讀取、複製或修改工具內部程式。
 
 ## Homepage 本機開發
 

@@ -1,4 +1,4 @@
 export const toolLinks = {
-  buyerBudget: "/buyer-budget/",
-  sellerNet: "/seller-net/",
+  buyerBudget: "https://buyer-budget.vercel.app/",
+  sellerNet: "https://seller-net-calculator.vercel.app/",
 } as const;
