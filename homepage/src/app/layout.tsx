@@ -23,9 +23,9 @@ export const metadata: Metadata = {
     description,
     images: [
       {
-        url: "/og-preview.png",
-        width: 1358,
-        height: 1159,
+        url: "/og-preview.jpg",
+        width: 1729,
+        height: 910,
         alt: "岠鋐團隊不動產財務試算",
       },
     ],
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og-preview.png"],
+    images: ["/og-preview.jpg"],
   },
   robots: {
     index: true,
@@ -56,3 +56,4 @@ export default function RootLayout({
     </html>
   );
 }
+
