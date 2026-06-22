@@ -2,10 +2,44 @@
 import { InitialScrollReset } from "@/components/initial-scroll-reset";
 import "./globals.css";
 
+const title = "房地產全方位｜買賣稅務試算";
+const description = "岠鋐不動產事業製作";
+
 export const metadata: Metadata = {
-  title: "房產試算｜自備款可購總價與房地合一稅試算",
-  description:
-    "免費使用自備款可購總價與房地合一稅試算工具，提前掌握買房預算、貸款配置與賣房稅務成本。",
+  metadataBase: new URL("https://property-tools-homepage.vercel.app"),
+  title,
+  description,
+  applicationName: "房地產全方位",
+  authors: [{ name: "岠鋐不動產事業" }],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "zh_TW",
+    url: "/",
+    siteName: "房地產全方位",
+    title,
+    description,
+    images: [
+      {
+        url: "/og-preview.png",
+        width: 1358,
+        height: 1159,
+        alt: "岠鋐團隊不動產財務試算",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/og-preview.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -22,4 +56,3 @@ export default function RootLayout({
     </html>
   );
 }
-
