@@ -287,23 +287,11 @@ function escapeHtml(value) {
 }
 
 function collectBreakdownRows() {
-  const keepLabels = new Set([
-    "出售成交價",
-    "取得成本",
-    "出售時成本合計",
-    "購買時成本合計",
-    "成本費用合計",
-    "減土地漲價總數額",
-    "交易獲利",
-    "課稅所得",
-  ]);
-
   return [...document.querySelectorAll("#breakdownList .breakdown-row")]
     .map((row) => ({
       label: row.querySelector("dt")?.textContent || "",
       value: row.querySelector("dd")?.textContent || "",
-    }))
-    .filter((row) => keepLabels.has(row.label));
+    }));
 }
 
 
@@ -393,6 +381,9 @@ function generatePdfReport() {
   const logoUrl = new URL("./assets/logo-transparent.png", window.location.href).href;
   const legalText = document.querySelector(".legal-disclaimer")?.innerHTML || "";
   const rows = collectBreakdownRows();
+  const transactionLabels = new Set(["出售成交價", "取得成本"]);
+  const transactionRows = rows.filter((row) => transactionLabels.has(row.label));
+  const detailRows = rows.filter((row) => !transactionLabels.has(row.label));
   const reportWindow = window.open("", "_blank", "width=900,height=1100");
 
   if (!reportWindow) {
@@ -414,179 +405,349 @@ function generatePdfReport() {
         <meta charset="utf-8" />
         <title>售屋稅務試算報告</title>
         <style>
-          @page { size: A4; margin: 9mm; }
+          @page { size: A4; margin: 0; }
           * { box-sizing: border-box; }
+          :root {
+            --yellow: #ffd110;
+            --black: #161616;
+            --ink: #202020;
+            --muted: #707070;
+            --line: #dddddd;
+          }
           body {
             margin: 0;
-            color: #ffffff;
-            background: #d9c1a6;
+            color: var(--ink);
+            background: #ececea;
             font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
           }
+          .printbar {
+            position: sticky;
+            z-index: 10;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--black);
+            box-shadow: 0 5px 18px rgba(0,0,0,.18);
+          }
+          .printbar button {
+            min-height: 42px;
+            border: 0;
+            border-radius: 8px;
+            padding: 9px 20px;
+            color: var(--black);
+            background: var(--yellow);
+            font-weight: 900;
+            cursor: pointer;
+          }
+          .printbar .close {
+            color: #fff;
+            border: 1px solid #555;
+            background: #292929;
+          }
           .sheet {
-            width: 192mm;
-            min-height: 279mm;
-            margin: 0 auto;
-            padding: 9mm;
-            background: #d9c1a6;
+            position: relative;
+            display: flex;
+            width: 210mm;
+            min-height: 297mm;
+            flex-direction: column;
+            margin: 18px auto;
+            overflow: hidden;
+            padding: 11mm 12mm 9mm;
+            background: #fff;
+            box-shadow: 0 14px 40px rgba(0,0,0,.12);
           }
           .header {
+            position: relative;
             display: grid;
-            grid-template-columns: 54px 1fr;
-            gap: 10px;
+            grid-template-columns: 25mm 1fr;
+            gap: 7mm;
+            min-height: 44mm;
             align-items: center;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,.42);
+            overflow: hidden;
+            padding: 7mm 9mm;
+            border-radius: 3mm;
+            color: #fff;
+            background: var(--black);
+          }
+          .header::after {
+            position: absolute;
+            top: -31mm;
+            right: -26mm;
+            width: 64mm;
+            height: 64mm;
+            border: 9mm solid var(--yellow);
+            border-radius: 50%;
+            content: "";
           }
           .logo {
-            width: 50px;
-            height: 50px;
+            position: relative;
+            z-index: 1;
+            width: 25mm;
+            height: 25mm;
             object-fit: contain;
           }
+          .header-copy {
+            position: relative;
+            z-index: 1;
+          }
           .eyebrow {
-            margin: 0 0 4px;
-            color: #fff7ef;
-            font-size: 11px;
-            font-weight: 800;
+            margin: 0 0 1.5mm;
+            color: var(--yellow);
+            font-size: 8pt;
+            font-weight: 900;
           }
           h1 {
             margin: 0;
-            font-size: 23px;
-            line-height: 1.15;
+            font-size: 23pt;
+            line-height: 1.12;
           }
           .subtitle {
-            margin: 5px 0 0;
-            color: rgba(255,255,255,.82);
-            font-size: 12px;
+            margin: 2mm 0 0;
+            color: #d2d2d2;
+            font-size: 8.5pt;
+          }
+          .report-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 8mm;
+            margin: 3.5mm 0 0;
+            color: #777;
+            font-size: 7.5pt;
           }
           .hero {
-            margin-top: 10px;
-            padding: 14px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #050505, #5c422d);
+            display: grid;
+            grid-template-columns: 48mm minmax(0, 1fr);
+            gap: 5mm;
+            min-height: 31mm;
+            align-items: center;
+            margin-top: 4mm;
+            padding: 5mm 8mm 5mm 6mm;
+            border-left: 4mm solid var(--yellow);
+            border-radius: 2mm;
+            color: #fff;
+            background: var(--black);
           }
           .hero span {
             display: block;
-            font-size: 13px;
-            font-weight: 800;
-            opacity: .9;
+            color: var(--yellow);
+            font-size: 12pt;
+            font-weight: 900;
+            line-height: 1.3;
           }
           .hero strong {
             display: block;
-            margin-top: 5px;
-            font-size: 34px;
+            color: var(--yellow);
+            font-size: 37pt;
             line-height: 1;
+            text-align: left;
           }
           .hero p {
-            margin: 9px 0 0;
-            font-size: 13px;
-            color: rgba(255,255,255,.86);
+            grid-column: 1 / -1;
+            margin: -1mm 0 0;
+            color: #c8c8c8;
+            font-size: 8pt;
           }
           .cards {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 7px;
-            margin-top: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            margin-top: 3mm;
+            border: 1px solid var(--line);
+            border-radius: 2mm;
           }
           .card {
-            min-height: 48px;
-            padding: 8px;
-            border: 1px solid rgba(255,255,255,.36);
-            border-radius: 8px;
-            background: rgba(255,255,255,.11);
+            min-height: 18mm;
+            padding: 4mm;
+            border-right: 1px solid var(--line);
+            background: #fafafa;
           }
+          .card:last-child { border-right: 0; }
           .card span {
             display: block;
-            color: rgba(255,255,255,.78);
-            font-size: 11px;
+            color: var(--muted);
+            font-size: 7.5pt;
             font-weight: 700;
           }
           .card strong {
             display: block;
-            margin-top: 4px;
-            font-size: 16px;
+            margin-top: 1.5mm;
+            color: var(--ink);
+            font-size: 13pt;
           }
           .section {
-            margin-top: 10px;
-            padding: 10px;
-            border: 1px solid rgba(255,255,255,.34);
-            border-radius: 8px;
-            background: rgba(114,84,57,.28);
+            margin-top: 3.2mm;
+          }
+          .section-title {
+            display: flex;
+            align-items: center;
+            gap: 2.5mm;
+            margin-bottom: 2mm;
+          }
+          .section-index {
+            display: grid;
+            width: 9mm;
+            height: 9mm;
+            place-items: center;
+            border-radius: 2mm;
+            color: var(--black);
+            background: var(--yellow);
+            font-size: 7.5pt;
+            font-weight: 900;
           }
           h2 {
-            margin: 0 0 6px;
-            font-size: 14px;
+            margin: 0;
+            font-size: 11pt;
+          }
+          .rows {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            border-top: 1px solid var(--line);
+            border-left: 1px solid var(--line);
+          }
+          .primary-rows {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+          .primary-rows .row {
+            min-height: 13mm;
+            background: #fafafa;
+          }
+          .primary-rows .row .label {
+            font-size: 8.5pt;
+            font-weight: 800;
+          }
+          .primary-rows .row .value {
+            font-size: 13pt;
           }
           .row {
             display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 12px;
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255,255,255,.24);
-            font-size: 10.5px;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 4mm;
+            min-height: 10mm;
+            align-items: center;
+            padding: 2.3mm 3mm;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            font-size: 7.7pt;
           }
-          .row:last-child { border-bottom: 0; }
-          .row .value { font-weight: 800; text-align: right; }
-          .company {
-            display: grid;
-            justify-items: center;
-            gap: 5px;
-            margin-top: 10px;
-            padding: 7px;
-            border-radius: 8px;
-            background: #050505;
-            font-size: 9px;
-            text-align: center;
+          .row:nth-child(4n+3),
+          .row:nth-child(4n+4) {
+            background: #fafafa;
           }
-          .company img {
-            width: 34px;
-            height: 34px;
-            object-fit: contain;
+          .row .label { color: #666; }
+          .row .value {
+            color: var(--ink);
+            font-weight: 900;
+            text-align: right;
+            white-space: nowrap;
+          }
+          .footer {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5mm;
+            margin-top: auto;
+            padding-top: 4mm;
+            border-top: 1px solid var(--line);
           }
           .legal {
-            margin: 6px 0 0;
-            color: rgba(64,64,64,.8);
-            font-family: "PMingLiU", "MingLiU", serif;
-            font-size: 7.5px;
-            line-height: 1.25;
+            order: 2;
+            margin: 0;
+            color: #777;
+            font-size: 5.8pt;
+            line-height: 1.45;
           }
-          .printbar {
-            position: sticky;
-            top: 0;
-            display: flex;
+          .company {
+            display: grid;
+            grid-template-columns: 15mm auto;
             justify-content: center;
-            gap: 8px;
-            padding: 10px;
-            background: #2b2119;
-          }
-          .printbar button {
-            border: 0;
-            border-radius: 8px;
-            padding: 9px 14px;
+            gap: 4mm;
+            width: 100%;
+            min-height: 19mm;
+            align-items: center;
+            padding: 3mm 6mm;
+            border-radius: 2mm;
             color: #fff;
-            background: #d71920;
-            font-weight: 800;
-            cursor: pointer;
+            background: var(--black);
+          }
+          .company img {
+            width: 15mm;
+            height: 15mm;
+            object-fit: contain;
+          }
+          .company strong {
+            display: block;
+            color: var(--yellow);
+            font-size: 10pt;
+            line-height: 1.2;
+            text-align: center;
+          }
+          .company span {
+            display: block;
+            margin-top: 1mm;
+            color: #d0d0d0;
+            font-size: 7.5pt;
+            line-height: 1.25;
+            text-align: center;
           }
           @media print {
-            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body {
+              background: #fff;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
             .printbar { display: none; }
-            .sheet { margin: 0; }
+            .sheet {
+              width: 210mm;
+              min-height: 297mm;
+              margin: 0;
+              box-shadow: none;
+              page-break-after: avoid;
+              break-after: avoid-page;
+            }
+          }
+          @media screen and (max-width: 760px) {
+            .sheet {
+              width: 100%;
+              min-height: 0;
+              margin: 0;
+              padding: 16px;
+              box-shadow: none;
+            }
+            .header {
+              grid-template-columns: 64px 1fr;
+              min-height: 150px;
+              padding: 20px;
+            }
+            .logo { width: 60px; height: 60px; }
+            h1 { font-size: 22px; }
+            .hero { grid-template-columns: 1fr; }
+            .hero strong { text-align: left; }
+            .cards,
+            .rows { grid-template-columns: 1fr; }
+            .card { border-right: 0; border-bottom: 1px solid var(--line); }
+            .row:nth-child(n) { background: #fff; }
+            .row:nth-child(2n) { background: #fafafa; }
           }
         </style>
       </head>
       <body>
         <div class="printbar">
-          <button onclick="window.print()">下載 / 另存 PDF</button>
+          <button type="button" onclick="window.print()">列印 / 儲存 PDF</button>
+          <button class="close" type="button" onclick="window.close()">關閉預覽</button>
         </div>
         <main class="sheet">
           <header class="header">
             <img class="logo" src="${logoUrl}" alt="岠鋐不動產事業有限公司 LOGO" />
-            <div>
-              <p class="eyebrow">JU HONG TEAM</p>
+            <div class="header-copy">
+              <p class="eyebrow">售屋試算・快速掌握</p>
               <h1>售屋稅務試算報告</h1>
               <p class="subtitle">房地合一稅初步試算結果</p>
             </div>
           </header>
+          <div class="report-meta">
+            <span>報告用途：售屋稅務初步評估</span>
+            <span>產出日期：${new Intl.DateTimeFormat("zh-TW", { dateStyle: "long" }).format(new Date())}</span>
+          </div>
 
           <section class="hero">
             <span>預估房地合一稅</span>
@@ -609,30 +770,54 @@ function generatePdfReport() {
           </section>
 
           <section class="section">
-            <h2>重點摘要</h2>
-            ${rows
-              .map(
-                (row) => `
-                  <div class="row">
-                    <span>${escapeHtml(row.label)}</span>
-                    <span class="value">${escapeHtml(row.value)}</span>
-                  </div>
-                `
-              )
-              .join("")}
+            <div class="section-title">
+              <span class="section-index">01</span>
+              <h2>交易主要資料</h2>
+            </div>
+            <div class="rows primary-rows">
+              ${transactionRows
+                .map(
+                  (row) => `
+                    <div class="row">
+                      <span class="label">${escapeHtml(row.label)}</span>
+                      <span class="value">${escapeHtml(row.value)}</span>
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
           </section>
 
-          <section class="company">
-            <img src="${logoUrl}" alt="岠鋐不動產事業有限公司 LOGO" />
-            <strong>岠鋐不動產事業有限公司</strong>
-            <span>如仍有疑問，歡迎即刻來電 (07) - 7779365 預約精準試算</span>
+          <section class="section">
+            <div class="section-title">
+              <span class="section-index">02</span>
+              <h2>細項成本與試算明細</h2>
+            </div>
+            <div class="rows">
+              ${detailRows
+                .map(
+                  (row) => `
+                    <div class="row">
+                      <span class="label">${escapeHtml(row.label)}</span>
+                      <span class="value">${escapeHtml(row.value)}</span>
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
           </section>
 
-          <p class="legal">${legalText}</p>
+          <footer class="footer">
+            <section class="company">
+              <img src="${logoUrl}" alt="岠鋐不動產事業有限公司 LOGO" />
+              <div>
+                <strong>岠鋐不動產事業有限公司</strong>
+                <span>如仍有疑問，歡迎來電洽詢 (07)-7779365</span>
+              </div>
+            </section>
+            <p class="legal">${legalText}</p>
+          </footer>
         </main>
-        <script>
-          window.addEventListener("load", () => setTimeout(() => window.print(), 350));
-        <\/script>
       </body>
     </html>
   `);
@@ -675,6 +860,17 @@ const propertyIncomeData = {
     "高雄市": 3000,
   },
   defaultLuxuryThresholdWan: 2200,
+  luxuryUnitThresholdWan: {
+    "臺北市": 120,
+    "新北市": 75,
+    "桃園市": 50,
+    "新竹縣": 50,
+    "新竹市": 50,
+    "臺中市": 50,
+    "臺南市": 50,
+    "高雄市": 50,
+  },
+  defaultLuxuryUnitThresholdWan: 35,
   rates: {
     "臺北市": [
       ["中山區", 50], ["松山區", 50], ["中正區", 50], ["大安區", 50], ["信義區", 50],
@@ -723,6 +919,10 @@ function getPropertyLuxuryThreshold(city) {
   return propertyIncomeData.luxuryThresholdWan[city] || propertyIncomeData.defaultLuxuryThresholdWan;
 }
 
+function getPropertyLuxuryUnitThreshold(city) {
+  return propertyIncomeData.luxuryUnitThresholdWan[city] || propertyIncomeData.defaultLuxuryUnitThresholdWan;
+}
+
 function getPropertyRate(city, district) {
   const districts = propertyIncomeData.rates[city] || [];
   return districts.find(([name]) => name === district) || districts.find(([name]) => name === "其他") || null;
@@ -764,6 +964,7 @@ function calculatePropertyIncome() {
   const assessedValue = number("propertyAssessedValue");
   const hasLocation = Boolean(city && district && rateInfo);
   const thresholdWan = hasLocation ? getPropertyLuxuryThreshold(city) : 0;
+  const unitThresholdWan = hasLocation ? getPropertyLuxuryUnitThreshold(city) : 0;
   const isLuxury = hasLocation && salePriceWan >= thresholdWan && salePriceWan > 0;
   const acquireDate = propertyAcquireDate();
   const newSystemStart = new Date(2016, 0, 1);
@@ -774,7 +975,13 @@ function calculatePropertyIncome() {
   $("propertyRateNote").textContent = rateInfo
     ? city + district + "依房屋評定現值之 " + rate + "% 計算財產交易所得。"
     : "請選擇縣市與地區。";
-  $("luxuryThreshold").textContent = hasLocation ? money(thresholdWan * 10000) : "請先選擇縣市及地區";
+  $("luxuryThreshold").innerHTML = hasLocation
+    ? '<span class="threshold-line"><small>總價</small>' +
+      thresholdWan.toLocaleString("zh-TW") +
+      ' 萬元以上</span><span class="threshold-line"><small>每坪</small>' +
+      unitThresholdWan.toLocaleString("zh-TW") +
+      " 萬元以上</span>"
+    : "請先選擇縣市及地區";
   $("propertySalePrice").textContent = money(salePrice);
   $("propertyEstimatedIncome").textContent = money(assessedValue * (rate / 100));
   $("propertySystemStatus").textContent = isNewSystem ? "可能適用新制" : acquireDate ? "舊制可參考" : "待判斷";

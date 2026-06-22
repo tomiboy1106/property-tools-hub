@@ -23,13 +23,22 @@
     <main class="app">
       <section class="workspace" aria-label="售屋稅務試算工具">
         <header class="topbar">
-          <p class="eyebrow">JU HONG TEAM</p>
-          <h1>售屋稅務試算工具</h1>
-          <div class="tax-tabs" role="tablist" aria-label="稅務試算類型">
-            <button class="active" type="button" data-tax-tab="houseLand">房地合一稅</button>
-            <button type="button" data-tax-tab="propertyIncome">財產交易所得稅</button>
+          <div class="brand-lockup">
+            <div class="brand-emblem">
+              <img src="./assets/logo-transparent.png" alt="" />
+            </div>
+            <div class="brand-copy">
+              <p class="eyebrow">售屋試算・快速掌握</p>
+              <h1>售屋稅務試算工具</h1>
+              <p class="header-summary">輸入成交價格與成本資料，立即掌握交易獲利與預估稅額。</p>
+            </div>
           </div>
         </header>
+
+        <div class="tax-tabs" role="tablist" aria-label="稅務試算類型">
+          <button class="active" type="button" data-tax-tab="houseLand">房地合一稅</button>
+          <button type="button" data-tax-tab="propertyIncome">財產交易所得稅</button>
+        </div>
 
         <section class="tax-view active" id="houseLandView" aria-label="房地合一稅試算">
           <div class="layout">
@@ -138,6 +147,9 @@
                     <span>土地漲價總數額（元）</span>
                     <input id="landValueIncrement" class="clearable" type="number" inputmode="numeric" min="0" step="10000" />
                   </label>
+                  <p class="land-value-note">
+                    土地漲價總數額計算公式為：出售當年度公告土地現值 － 前次移轉現值。
+                  </p>
 </div>
               </div>
 
