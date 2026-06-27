@@ -7,6 +7,7 @@ const VISIT_COUNTER_KEY = "juhong-homepage-visit-count";
 
 type VisitCounterResponse = {
   count?: number;
+  source?: "database" | "local-fallback";
 };
 
 export function VisitCounter() {
@@ -22,7 +23,12 @@ export function VisitCounter() {
         });
         const data = (await response.json()) as VisitCounterResponse;
 
-        if (isActive && typeof data.count === "number" && data.count >= VISIT_COUNTER_BASE) {
+        if (
+          isActive &&
+          data.source === "database" &&
+          typeof data.count === "number" &&
+          data.count >= VISIT_COUNTER_BASE
+        ) {
           setCount(data.count);
           return;
         }
