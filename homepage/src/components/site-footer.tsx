@@ -1,5 +1,6 @@
 import { Phone } from "lucide-react";
 import { CompanyIdentity } from "@/components/company-identity";
+import { VisitCounter } from "@/components/visit-counter";
 
 export function SiteFooter() {
   return (
@@ -16,6 +17,7 @@ export function SiteFooter() {
         <p className="footer-copyright">
           © {new Date().getFullYear()} 岠鋐不動產事業
         </p>
+        <VisitCounter />
       </div>
     </footer>
   );

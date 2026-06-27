@@ -944,6 +944,13 @@ button {
   font-size: 11px;
 }
 
+.visit-counter {
+  margin: 0.45rem 0 0;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
 .placeholder-main {
   display: grid;
   min-height: 100svh;
