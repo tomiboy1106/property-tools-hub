@@ -14,8 +14,8 @@ export function Brand({ footer = false }: BrandProps) {
         </span>
       </span>
       <span className="brand-text">
-        <strong>房地產財務規劃</strong>
-        <small>買賣房產，把數字先算清楚</small>
+        <strong>岠鋐不動產官方網站</strong>
+        <small>提供稅務、自備款試算、房市新聞最佳輔助</small>
       </span>
     </span>
   );

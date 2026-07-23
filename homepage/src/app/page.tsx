@@ -1,64 +1,22 @@
 import {
-  ArrowRight,
   Banknote,
   Calculator,
   Check,
-  ClipboardCheck,
   FileText,
   KeyRound,
-  ListChecks,
-  MousePointerClick,
-  PencilLine,
-  Sparkles,
 } from "lucide-react";
 import { HeroVisual } from "@/components/hero-visual";
 import { CompanyIdentity } from "@/components/company-identity";
+import { MarketInsightsSection } from "@/components/market-insights-section";
+import { RealEstateNewsSection } from "@/components/real-estate-news-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ScrollToToolsButton } from "@/components/scroll-to-tools-button";
+import { TeamIntroduction } from "@/components/team-introduction";
 import { ToolCard } from "@/components/tool-card";
 import { toolLinks } from "@/config/tool-links";
 
-const steps = [
-  {
-    number: "01",
-    title: "選擇工具",
-    description: "根據你正在準備買房或賣房，選擇對應的試算。",
-    icon: MousePointerClick,
-  },
-  {
-    number: "02",
-    title: "輸入資料",
-    description: "依照畫面提示填入預算、貸款或房屋交易相關資訊。",
-    icon: PencilLine,
-  },
-  {
-    number: "03",
-    title: "查看結果",
-    description: "立即取得清楚的試算結果與重要數字整理。",
-    icon: ClipboardCheck,
-  },
-];
-
-const features = [
-  {
-    title: "簡單輸入",
-    description: "不需要先理解複雜公式，依照提示填入已知資料即可。",
-    icon: ListChecks,
-  },
-  {
-    title: "即時計算",
-    description: "調整輸入內容後，快速查看不同條件下的試算結果。",
-    icon: Calculator,
-  },
-  {
-    title: "清楚呈現",
-    description: "將重要數字與估算依據整理成容易理解的結果。",
-    icon: Sparkles,
-  },
-];
-
-export default function Home() {
+export default async function Home() {
   return (
     <>
       <SiteHeader />
@@ -68,6 +26,7 @@ export default function Home() {
             <CompanyIdentity />
           </div>
         </section>
+        <TeamIntroduction />
         <section className="hero-section" aria-labelledby="hero-title">
           <div className="site-container hero-grid">
             <div className="hero-copy">
@@ -97,21 +56,16 @@ export default function Home() {
         <section id="tools" className="section tools-section" aria-labelledby="tools-title">
           <div className="site-container">
             <div className="section-heading centered">
-              <p className="section-kicker">選擇適合你的工具</p>
+              <p className="section-kicker">快速試算入口</p>
               <h2 id="tools-title">你現在準備做哪一件事？</h2>
-              <p>依照目前的房產計畫，選擇適合你的試算工具。</p>
+              <p>兩個工具各自對應買房與賣房前最常遇到的金流問題。</p>
             </div>
             <div className="tools-grid">
               <ToolCard
                 tone="green"
                 label="我準備買房"
                 title="自備款可購總價試算"
-                description="輸入目前準備的自備款，快速估算可以負擔的房屋總價、預計貸款金額，以及應保留的購屋相關費用。"
-                items={[
-                  "估算可購房屋總價",
-                  "推算貸款與自備款配置",
-                  "納入常見購屋相關費用",
-                ]}
+                description="用目前自備款估算可負擔總價、貸款金額與購屋費用。"
                 buttonLabel="計算可購總價"
                 href={toolLinks.buyerBudget}
                 icon={KeyRound}
@@ -120,81 +74,18 @@ export default function Home() {
                 tone="orange"
                 label="我準備賣房"
                 title="房地合一稅及財交稅試算"
-                description="依照房屋取得、持有及出售資訊，初步估算房地合一所得稅或財產交易所得稅，提前了解交易可能產生的稅務成本。"
-                items={[
-                  "判斷可能適用的稅率",
-                  "估算課稅所得與稅額",
-                  "了解出售後的資金概況",
-                ]}
+                description="出售前先估算可能稅額，提前整理交易後資金概況。"
                 buttonLabel="開始試算售屋稅務"
                 href={toolLinks.sellerNet}
                 icon={FileText}
               />
             </div>
-          </div>
-        </section>
-
-        <section className="section process-section" aria-labelledby="process-title">
-          <div className="site-container">
-            <div className="section-heading centered">
-              <p className="section-kicker">使用方式</p>
-              <h2 id="process-title">三個步驟，快速掌握房產數字</h2>
-            </div>
-            <ol className="steps-list">
-              {steps.map((step, index) => (
-                <li className="step-item" key={step.number}>
-                  <div className="step-topline">
-                    <span className="step-icon">
-                      <step.icon size={23} aria-hidden="true" />
-                    </span>
-                    {index < steps.length - 1 && (
-                      <span className="step-connector" aria-hidden="true">
-                        <ArrowRight size={18} />
-                      </span>
-                    )}
-                  </div>
-                  <p className="step-number">STEP {step.number}</p>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <section id="about" className="section features-section" aria-labelledby="features-title">
-          <div className="site-container feature-layout">
-            <div className="section-heading">
-              <p className="section-kicker">為日常決策而設計</p>
-              <h2 id="features-title">複雜的房產計算，也可以簡單一點</h2>
-              <p>
-                我們把繁瑣的條件整理成清楚的步驟，讓你先看懂數字，再決定下一步。
-              </p>
-            </div>
-            <div className="feature-list">
-              {features.map((feature) => (
-                <article className="feature-item" key={feature.title}>
-                  <span className="feature-icon">
-                    <feature.icon size={22} aria-hidden="true" />
-                  </span>
-                  <div>
-                    <h3>{feature.title}</h3>
-                    <p>{feature.description}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="notice-section" aria-labelledby="notice-title">
-          <div className="site-container">
-            <aside className="notice-box">
+            <aside className="tools-inline-notice" aria-labelledby="tools-notice-title">
               <span className="notice-icon">
-                <Banknote size={25} aria-hidden="true" />
+                <Banknote size={22} aria-hidden="true" />
               </span>
               <div>
-                <h2 id="notice-title">試算前請留意</h2>
+                <h3 id="tools-notice-title">試算前請留意</h3>
                 <p>
                   本平台提供的結果是依照使用者輸入資料及一般條件進行的初步估算，僅供財務規劃參考。實際稅額、貸款條件、鑑價結果及交易費用，仍應以主管機關、金融機構或專業人士的正式認定為準。
                 </p>
@@ -202,6 +93,10 @@ export default function Home() {
             </aside>
           </div>
         </section>
+
+        <MarketInsightsSection />
+
+        <RealEstateNewsSection />
 
         <section className="closing-section" aria-labelledby="closing-title">
           <div className="site-container closing-card">

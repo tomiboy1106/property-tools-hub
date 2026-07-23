@@ -1,0 +1,1871 @@
+{
+  "city": "高雄市",
+  "sourceName": "內政部不動產成交案件實際資訊資料供應系統",
+  "sourceUrl": "https://data.gov.tw/dataset/77051",
+  "generatedAt": "2026-07-23T02:55:43.766Z",
+  "periodStart": "2015-01",
+  "periodEnd": "2026-06",
+  "methodology": "平均單價取高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；成交量採高雄市政府地政局月報 Excel「總計」列，素地對應土地。",
+  "processedFiles": [
+    "104S1",
+    "104S2",
+    "104S3",
+    "104S4",
+    "105S1",
+    "105S2",
+    "105S3",
+    "105S4",
+    "106S1",
+    "106S2",
+    "106S3",
+    "106S4",
+    "107S1",
+    "107S2",
+    "107S3",
+    "107S4",
+    "108S1",
+    "108S2",
+    "108S3",
+    "108S4",
+    "109S1",
+    "109S2",
+    "109S3",
+    "109S4",
+    "110S1",
+    "110S2",
+    "110S3",
+    "110S4",
+    "111S1",
+    "111S2",
+    "111S3",
+    "111S4",
+    "112S1",
+    "112S2",
+    "112S3",
+    "112S4",
+    "113S1",
+    "113S2",
+    "113S3",
+    "113S4",
+    "114S1",
+    "114S2",
+    "114S3",
+    "114S4",
+    "115S1",
+    "115S2",
+    "current"
+  ],
+  "priceSeries": [
+    {
+      "month": "2015-01",
+      "averagePricePerPing": 15.61,
+      "transactions": 1691
+    },
+    {
+      "month": "2015-02",
+      "averagePricePerPing": 15.61,
+      "transactions": 1250
+    },
+    {
+      "month": "2015-03",
+      "averagePricePerPing": 15.99,
+      "transactions": 2340
+    },
+    {
+      "month": "2015-04",
+      "averagePricePerPing": 16.05,
+      "transactions": 2214
+    },
+    {
+      "month": "2015-05",
+      "averagePricePerPing": 16.11,
+      "transactions": 2152
+    },
+    {
+      "month": "2015-06",
+      "averagePricePerPing": 15.94,
+      "transactions": 2122
+    },
+    {
+      "month": "2015-07",
+      "averagePricePerPing": 16.28,
+      "transactions": 2223
+    },
+    {
+      "month": "2015-08",
+      "averagePricePerPing": 16.07,
+      "transactions": 1832
+    },
+    {
+      "month": "2015-09",
+      "averagePricePerPing": 16.05,
+      "transactions": 1822
+    },
+    {
+      "month": "2015-10",
+      "averagePricePerPing": 16.06,
+      "transactions": 2017
+    },
+    {
+      "month": "2015-11",
+      "averagePricePerPing": 16.67,
+      "transactions": 2629
+    },
+    {
+      "month": "2015-12",
+      "averagePricePerPing": 16.1,
+      "transactions": 3125
+    },
+    {
+      "month": "2016-01",
+      "averagePricePerPing": 15.4,
+      "transactions": 1337
+    },
+    {
+      "month": "2016-02",
+      "averagePricePerPing": 16.57,
+      "transactions": 939
+    },
+    {
+      "month": "2016-03",
+      "averagePricePerPing": 16.48,
+      "transactions": 1818
+    },
+    {
+      "month": "2016-04",
+      "averagePricePerPing": 16.6,
+      "transactions": 2289
+    },
+    {
+      "month": "2016-05",
+      "averagePricePerPing": 16.74,
+      "transactions": 2389
+    },
+    {
+      "month": "2016-06",
+      "averagePricePerPing": 16.96,
+      "transactions": 2335
+    },
+    {
+      "month": "2016-07",
+      "averagePricePerPing": 16.96,
+      "transactions": 2214
+    },
+    {
+      "month": "2016-08",
+      "averagePricePerPing": 16.7,
+      "transactions": 1956
+    },
+    {
+      "month": "2016-09",
+      "averagePricePerPing": 16.54,
+      "transactions": 1865
+    },
+    {
+      "month": "2016-10",
+      "averagePricePerPing": 16.04,
+      "transactions": 2390
+    },
+    {
+      "month": "2016-11",
+      "averagePricePerPing": 16.35,
+      "transactions": 2437
+    },
+    {
+      "month": "2016-12",
+      "averagePricePerPing": 16.68,
+      "transactions": 2549
+    },
+    {
+      "month": "2017-01",
+      "averagePricePerPing": 16.76,
+      "transactions": 1513
+    },
+    {
+      "month": "2017-02",
+      "averagePricePerPing": 16.7,
+      "transactions": 1838
+    },
+    {
+      "month": "2017-03",
+      "averagePricePerPing": 16.62,
+      "transactions": 2654
+    },
+    {
+      "month": "2017-04",
+      "averagePricePerPing": 16.89,
+      "transactions": 2468
+    },
+    {
+      "month": "2017-05",
+      "averagePricePerPing": 16.85,
+      "transactions": 2344
+    },
+    {
+      "month": "2017-06",
+      "averagePricePerPing": 16.91,
+      "transactions": 2571
+    },
+    {
+      "month": "2017-07",
+      "averagePricePerPing": 16.86,
+      "transactions": 2259
+    },
+    {
+      "month": "2017-08",
+      "averagePricePerPing": 16.91,
+      "transactions": 2254
+    },
+    {
+      "month": "2017-09",
+      "averagePricePerPing": 17.39,
+      "transactions": 2051
+    },
+    {
+      "month": "2017-10",
+      "averagePricePerPing": 17.62,
+      "transactions": 2243
+    },
+    {
+      "month": "2017-11",
+      "averagePricePerPing": 16.9,
+      "transactions": 2686
+    },
+    {
+      "month": "2017-12",
+      "averagePricePerPing": 16.98,
+      "transactions": 2571
+    },
+    {
+      "month": "2018-01",
+      "averagePricePerPing": 17.49,
+      "transactions": 2505
+    },
+    {
+      "month": "2018-02",
+      "averagePricePerPing": 17.5,
+      "transactions": 1568
+    },
+    {
+      "month": "2018-03",
+      "averagePricePerPing": 16.93,
+      "transactions": 2755
+    },
+    {
+      "month": "2018-04",
+      "averagePricePerPing": 17.06,
+      "transactions": 2589
+    },
+    {
+      "month": "2018-05",
+      "averagePricePerPing": 16.57,
+      "transactions": 2792
+    },
+    {
+      "month": "2018-06",
+      "averagePricePerPing": 16.86,
+      "transactions": 2470
+    },
+    {
+      "month": "2018-07",
+      "averagePricePerPing": 16.88,
+      "transactions": 2607
+    },
+    {
+      "month": "2018-08",
+      "averagePricePerPing": 17.41,
+      "transactions": 2317
+    },
+    {
+      "month": "2018-09",
+      "averagePricePerPing": 17.65,
+      "transactions": 2265
+    },
+    {
+      "month": "2018-10",
+      "averagePricePerPing": 17.72,
+      "transactions": 2739
+    },
+    {
+      "month": "2018-11",
+      "averagePricePerPing": 16.98,
+      "transactions": 2274
+    },
+    {
+      "month": "2018-12",
+      "averagePricePerPing": 17.78,
+      "transactions": 3260
+    },
+    {
+      "month": "2019-01",
+      "averagePricePerPing": 18.02,
+      "transactions": 2914
+    },
+    {
+      "month": "2019-02",
+      "averagePricePerPing": 17.5,
+      "transactions": 2191
+    },
+    {
+      "month": "2019-03",
+      "averagePricePerPing": 18.28,
+      "transactions": 3654
+    },
+    {
+      "month": "2019-04",
+      "averagePricePerPing": 18.09,
+      "transactions": 3453
+    },
+    {
+      "month": "2019-05",
+      "averagePricePerPing": 18.2,
+      "transactions": 3152
+    },
+    {
+      "month": "2019-06",
+      "averagePricePerPing": 18.31,
+      "transactions": 2768
+    },
+    {
+      "month": "2019-07",
+      "averagePricePerPing": 18.66,
+      "transactions": 3075
+    },
+    {
+      "month": "2019-08",
+      "averagePricePerPing": 18.57,
+      "transactions": 2649
+    },
+    {
+      "month": "2019-09",
+      "averagePricePerPing": 18.55,
+      "transactions": 3034
+    },
+    {
+      "month": "2019-10",
+      "averagePricePerPing": 18.69,
+      "transactions": 3087
+    },
+    {
+      "month": "2019-11",
+      "averagePricePerPing": 18.77,
+      "transactions": 2991
+    },
+    {
+      "month": "2019-12",
+      "averagePricePerPing": 18.62,
+      "transactions": 3184
+    },
+    {
+      "month": "2020-01",
+      "averagePricePerPing": 19.26,
+      "transactions": 2376
+    },
+    {
+      "month": "2020-02",
+      "averagePricePerPing": 19.43,
+      "transactions": 2690
+    },
+    {
+      "month": "2020-03",
+      "averagePricePerPing": 18.52,
+      "transactions": 2948
+    },
+    {
+      "month": "2020-04",
+      "averagePricePerPing": 18.62,
+      "transactions": 2637
+    },
+    {
+      "month": "2020-05",
+      "averagePricePerPing": 19.28,
+      "transactions": 3384
+    },
+    {
+      "month": "2020-06",
+      "averagePricePerPing": 19.74,
+      "transactions": 3689
+    },
+    {
+      "month": "2020-07",
+      "averagePricePerPing": 19.47,
+      "transactions": 4144
+    },
+    {
+      "month": "2020-08",
+      "averagePricePerPing": 19.87,
+      "transactions": 3785
+    },
+    {
+      "month": "2020-09",
+      "averagePricePerPing": 20.21,
+      "transactions": 3935
+    },
+    {
+      "month": "2020-10",
+      "averagePricePerPing": 20.33,
+      "transactions": 4142
+    },
+    {
+      "month": "2020-11",
+      "averagePricePerPing": 19.92,
+      "transactions": 4101
+    },
+    {
+      "month": "2020-12",
+      "averagePricePerPing": 20.31,
+      "transactions": 3630
+    },
+    {
+      "month": "2021-01",
+      "averagePricePerPing": 20.7,
+      "transactions": 3629
+    },
+    {
+      "month": "2021-02",
+      "averagePricePerPing": 21,
+      "transactions": 2629
+    },
+    {
+      "month": "2021-03",
+      "averagePricePerPing": 20.64,
+      "transactions": 4230
+    },
+    {
+      "month": "2021-04",
+      "averagePricePerPing": 20.32,
+      "transactions": 3696
+    },
+    {
+      "month": "2021-05",
+      "averagePricePerPing": 20.09,
+      "transactions": 2943
+    },
+    {
+      "month": "2021-06",
+      "averagePricePerPing": 19.82,
+      "transactions": 2205
+    },
+    {
+      "month": "2021-07",
+      "averagePricePerPing": 20.75,
+      "transactions": 3022
+    },
+    {
+      "month": "2021-08",
+      "averagePricePerPing": 20.96,
+      "transactions": 3285
+    },
+    {
+      "month": "2021-09",
+      "averagePricePerPing": 22.63,
+      "transactions": 4957
+    },
+    {
+      "month": "2021-10",
+      "averagePricePerPing": 22.84,
+      "transactions": 4476
+    },
+    {
+      "month": "2021-11",
+      "averagePricePerPing": 23.14,
+      "transactions": 4154
+    },
+    {
+      "month": "2021-12",
+      "averagePricePerPing": 26.06,
+      "transactions": 4608
+    },
+    {
+      "month": "2022-01",
+      "averagePricePerPing": 22.61,
+      "transactions": 2838
+    },
+    {
+      "month": "2022-02",
+      "averagePricePerPing": 23.69,
+      "transactions": 2370
+    },
+    {
+      "month": "2022-03",
+      "averagePricePerPing": 23.6,
+      "transactions": 3125
+    },
+    {
+      "month": "2022-04",
+      "averagePricePerPing": 24.87,
+      "transactions": 2803
+    },
+    {
+      "month": "2022-05",
+      "averagePricePerPing": 24.07,
+      "transactions": 2548
+    },
+    {
+      "month": "2022-06",
+      "averagePricePerPing": 24.57,
+      "transactions": 2216
+    },
+    {
+      "month": "2022-07",
+      "averagePricePerPing": 23.88,
+      "transactions": 2258
+    },
+    {
+      "month": "2022-08",
+      "averagePricePerPing": 24.22,
+      "transactions": 1958
+    },
+    {
+      "month": "2022-09",
+      "averagePricePerPing": 23.64,
+      "transactions": 2192
+    },
+    {
+      "month": "2022-10",
+      "averagePricePerPing": 23.78,
+      "transactions": 2077
+    },
+    {
+      "month": "2022-11",
+      "averagePricePerPing": 23.24,
+      "transactions": 1847
+    },
+    {
+      "month": "2022-12",
+      "averagePricePerPing": 24.16,
+      "transactions": 2110
+    },
+    {
+      "month": "2023-01",
+      "averagePricePerPing": 24.5,
+      "transactions": 1526
+    },
+    {
+      "month": "2023-02",
+      "averagePricePerPing": 24.42,
+      "transactions": 2239
+    },
+    {
+      "month": "2023-03",
+      "averagePricePerPing": 24.46,
+      "transactions": 2815
+    },
+    {
+      "month": "2023-04",
+      "averagePricePerPing": 25.48,
+      "transactions": 2640
+    },
+    {
+      "month": "2023-05",
+      "averagePricePerPing": 24.65,
+      "transactions": 2733
+    },
+    {
+      "month": "2023-06",
+      "averagePricePerPing": 25.67,
+      "transactions": 2644
+    },
+    {
+      "month": "2023-07",
+      "averagePricePerPing": 25.1,
+      "transactions": 2458
+    },
+    {
+      "month": "2023-08",
+      "averagePricePerPing": 26.08,
+      "transactions": 2687
+    },
+    {
+      "month": "2023-09",
+      "averagePricePerPing": 26.57,
+      "transactions": 2787
+    },
+    {
+      "month": "2023-10",
+      "averagePricePerPing": 26.19,
+      "transactions": 3064
+    },
+    {
+      "month": "2023-11",
+      "averagePricePerPing": 26.56,
+      "transactions": 3287
+    },
+    {
+      "month": "2023-12",
+      "averagePricePerPing": 27.45,
+      "transactions": 3460
+    },
+    {
+      "month": "2024-01",
+      "averagePricePerPing": 28.6,
+      "transactions": 3738
+    },
+    {
+      "month": "2024-02",
+      "averagePricePerPing": 29.54,
+      "transactions": 3179
+    },
+    {
+      "month": "2024-03",
+      "averagePricePerPing": 29.14,
+      "transactions": 4814
+    },
+    {
+      "month": "2024-04",
+      "averagePricePerPing": 29.93,
+      "transactions": 4175
+    },
+    {
+      "month": "2024-05",
+      "averagePricePerPing": 29.98,
+      "transactions": 4377
+    },
+    {
+      "month": "2024-06",
+      "averagePricePerPing": 31.99,
+      "transactions": 4578
+    },
+    {
+      "month": "2024-07",
+      "averagePricePerPing": 31.92,
+      "transactions": 3827
+    },
+    {
+      "month": "2024-08",
+      "averagePricePerPing": 30.83,
+      "transactions": 2583
+    },
+    {
+      "month": "2024-09",
+      "averagePricePerPing": 30.19,
+      "transactions": 1905
+    },
+    {
+      "month": "2024-10",
+      "averagePricePerPing": 28.62,
+      "transactions": 1545
+    },
+    {
+      "month": "2024-11",
+      "averagePricePerPing": 27.67,
+      "transactions": 1780
+    },
+    {
+      "month": "2024-12",
+      "averagePricePerPing": 27.26,
+      "transactions": 1867
+    },
+    {
+      "month": "2025-01",
+      "averagePricePerPing": 28.48,
+      "transactions": 1409
+    },
+    {
+      "month": "2025-02",
+      "averagePricePerPing": 28.43,
+      "transactions": 1612
+    },
+    {
+      "month": "2025-03",
+      "averagePricePerPing": 27.97,
+      "transactions": 1975
+    },
+    {
+      "month": "2025-04",
+      "averagePricePerPing": 27.85,
+      "transactions": 1590
+    },
+    {
+      "month": "2025-05",
+      "averagePricePerPing": 27.19,
+      "transactions": 1591
+    },
+    {
+      "month": "2025-06",
+      "averagePricePerPing": 28.15,
+      "transactions": 1545
+    },
+    {
+      "month": "2025-07",
+      "averagePricePerPing": 27.12,
+      "transactions": 1256
+    },
+    {
+      "month": "2025-08",
+      "averagePricePerPing": 26.39,
+      "transactions": 1303
+    },
+    {
+      "month": "2025-09",
+      "averagePricePerPing": 28.62,
+      "transactions": 1308
+    },
+    {
+      "month": "2025-10",
+      "averagePricePerPing": 27.38,
+      "transactions": 1500
+    },
+    {
+      "month": "2025-11",
+      "averagePricePerPing": 29.2,
+      "transactions": 1423
+    },
+    {
+      "month": "2025-12",
+      "averagePricePerPing": 27,
+      "transactions": 1473
+    },
+    {
+      "month": "2026-01",
+      "averagePricePerPing": 27.59,
+      "transactions": 1555
+    },
+    {
+      "month": "2026-02",
+      "averagePricePerPing": 26.76,
+      "transactions": 988
+    },
+    {
+      "month": "2026-03",
+      "averagePricePerPing": 27.46,
+      "transactions": 1527
+    },
+    {
+      "month": "2026-04",
+      "averagePricePerPing": 26.39,
+      "transactions": 1150
+    },
+    {
+      "month": "2026-05",
+      "averagePricePerPing": 26.36,
+      "transactions": 558
+    },
+    {
+      "month": "2026-06",
+      "averagePricePerPing": 22.9,
+      "transactions": 155
+    }
+  ],
+  "volumeSeries": [
+    {
+      "month": "2015-01",
+      "apartment": 208,
+      "building": 795,
+      "elevatorApartment": 133,
+      "townhouse": 555,
+      "land": 471
+    },
+    {
+      "month": "2015-02",
+      "apartment": 154,
+      "building": 589,
+      "elevatorApartment": 105,
+      "townhouse": 405,
+      "land": 338
+    },
+    {
+      "month": "2015-03",
+      "apartment": 300,
+      "building": 1131,
+      "elevatorApartment": 169,
+      "townhouse": 741,
+      "land": 591
+    },
+    {
+      "month": "2015-04",
+      "apartment": 279,
+      "building": 1079,
+      "elevatorApartment": 151,
+      "townhouse": 706,
+      "land": 590
+    },
+    {
+      "month": "2015-05",
+      "apartment": 237,
+      "building": 1065,
+      "elevatorApartment": 167,
+      "townhouse": 685,
+      "land": 575
+    },
+    {
+      "month": "2015-06",
+      "apartment": 226,
+      "building": 1019,
+      "elevatorApartment": 148,
+      "townhouse": 730,
+      "land": 522
+    },
+    {
+      "month": "2015-07",
+      "apartment": 227,
+      "building": 1153,
+      "elevatorApartment": 158,
+      "townhouse": 686,
+      "land": 512
+    },
+    {
+      "month": "2015-08",
+      "apartment": 211,
+      "building": 921,
+      "elevatorApartment": 127,
+      "townhouse": 574,
+      "land": 460
+    },
+    {
+      "month": "2015-09",
+      "apartment": 183,
+      "building": 943,
+      "elevatorApartment": 116,
+      "townhouse": 580,
+      "land": 459
+    },
+    {
+      "month": "2015-10",
+      "apartment": 199,
+      "building": 976,
+      "elevatorApartment": 146,
+      "townhouse": 696,
+      "land": 517
+    },
+    {
+      "month": "2015-11",
+      "apartment": 254,
+      "building": 1490,
+      "elevatorApartment": 162,
+      "townhouse": 726,
+      "land": 563
+    },
+    {
+      "month": "2015-12",
+      "apartment": 268,
+      "building": 1782,
+      "elevatorApartment": 178,
+      "townhouse": 898,
+      "land": 676
+    },
+    {
+      "month": "2016-01",
+      "apartment": 164,
+      "building": 679,
+      "elevatorApartment": 100,
+      "townhouse": 394,
+      "land": 376
+    },
+    {
+      "month": "2016-02",
+      "apartment": 105,
+      "building": 461,
+      "elevatorApartment": 54,
+      "townhouse": 319,
+      "land": 281
+    },
+    {
+      "month": "2016-03",
+      "apartment": 199,
+      "building": 900,
+      "elevatorApartment": 123,
+      "townhouse": 596,
+      "land": 463
+    },
+    {
+      "month": "2016-04",
+      "apartment": 189,
+      "building": 1294,
+      "elevatorApartment": 130,
+      "townhouse": 676,
+      "land": 409
+    },
+    {
+      "month": "2016-05",
+      "apartment": 241,
+      "building": 1329,
+      "elevatorApartment": 148,
+      "townhouse": 671,
+      "land": 427
+    },
+    {
+      "month": "2016-06",
+      "apartment": 199,
+      "building": 1380,
+      "elevatorApartment": 134,
+      "townhouse": 622,
+      "land": 443
+    },
+    {
+      "month": "2016-07",
+      "apartment": 188,
+      "building": 1223,
+      "elevatorApartment": 147,
+      "townhouse": 657,
+      "land": 676
+    },
+    {
+      "month": "2016-08",
+      "apartment": 193,
+      "building": 1088,
+      "elevatorApartment": 98,
+      "townhouse": 578,
+      "land": 491
+    },
+    {
+      "month": "2016-09",
+      "apartment": 180,
+      "building": 959,
+      "elevatorApartment": 110,
+      "townhouse": 618,
+      "land": 405
+    },
+    {
+      "month": "2016-10",
+      "apartment": 226,
+      "building": 1298,
+      "elevatorApartment": 144,
+      "townhouse": 723,
+      "land": 520
+    },
+    {
+      "month": "2016-11",
+      "apartment": 231,
+      "building": 1322,
+      "elevatorApartment": 151,
+      "townhouse": 734,
+      "land": 671
+    },
+    {
+      "month": "2016-12",
+      "apartment": 237,
+      "building": 1409,
+      "elevatorApartment": 154,
+      "townhouse": 749,
+      "land": 694
+    },
+    {
+      "month": "2017-01",
+      "apartment": 145,
+      "building": 812,
+      "elevatorApartment": 94,
+      "townhouse": 462,
+      "land": 391
+    },
+    {
+      "month": "2017-02",
+      "apartment": 157,
+      "building": 1018,
+      "elevatorApartment": 119,
+      "townhouse": 544,
+      "land": 399
+    },
+    {
+      "month": "2017-03",
+      "apartment": 263,
+      "building": 1452,
+      "elevatorApartment": 173,
+      "townhouse": 767,
+      "land": 682
+    },
+    {
+      "month": "2017-04",
+      "apartment": 225,
+      "building": 1399,
+      "elevatorApartment": 142,
+      "townhouse": 703,
+      "land": 557
+    },
+    {
+      "month": "2017-05",
+      "apartment": 243,
+      "building": 1290,
+      "elevatorApartment": 143,
+      "townhouse": 668,
+      "land": 662
+    },
+    {
+      "month": "2017-06",
+      "apartment": 253,
+      "building": 1441,
+      "elevatorApartment": 169,
+      "townhouse": 709,
+      "land": 647
+    },
+    {
+      "month": "2017-07",
+      "apartment": 205,
+      "building": 1257,
+      "elevatorApartment": 139,
+      "townhouse": 659,
+      "land": 636
+    },
+    {
+      "month": "2017-08",
+      "apartment": 223,
+      "building": 1201,
+      "elevatorApartment": 152,
+      "townhouse": 681,
+      "land": 598
+    },
+    {
+      "month": "2017-09",
+      "apartment": 180,
+      "building": 1170,
+      "elevatorApartment": 129,
+      "townhouse": 575,
+      "land": 522
+    },
+    {
+      "month": "2017-10",
+      "apartment": 210,
+      "building": 1308,
+      "elevatorApartment": 120,
+      "townhouse": 605,
+      "land": 515
+    },
+    {
+      "month": "2017-11",
+      "apartment": 253,
+      "building": 1527,
+      "elevatorApartment": 151,
+      "townhouse": 755,
+      "land": 583
+    },
+    {
+      "month": "2017-12",
+      "apartment": 230,
+      "building": 1410,
+      "elevatorApartment": 155,
+      "townhouse": 777,
+      "land": 686
+    },
+    {
+      "month": "2018-01",
+      "apartment": 216,
+      "building": 1422,
+      "elevatorApartment": 149,
+      "townhouse": 718,
+      "land": 554
+    },
+    {
+      "month": "2018-02",
+      "apartment": 143,
+      "building": 939,
+      "elevatorApartment": 75,
+      "townhouse": 411,
+      "land": 333
+    },
+    {
+      "month": "2018-03",
+      "apartment": 269,
+      "building": 1519,
+      "elevatorApartment": 165,
+      "townhouse": 803,
+      "land": 574
+    },
+    {
+      "month": "2018-04",
+      "apartment": 256,
+      "building": 1436,
+      "elevatorApartment": 160,
+      "townhouse": 739,
+      "land": 494
+    },
+    {
+      "month": "2018-05",
+      "apartment": 252,
+      "building": 1641,
+      "elevatorApartment": 155,
+      "townhouse": 747,
+      "land": 671
+    },
+    {
+      "month": "2018-06",
+      "apartment": 232,
+      "building": 1455,
+      "elevatorApartment": 162,
+      "townhouse": 622,
+      "land": 612
+    },
+    {
+      "month": "2018-07",
+      "apartment": 239,
+      "building": 1473,
+      "elevatorApartment": 168,
+      "townhouse": 728,
+      "land": 550
+    },
+    {
+      "month": "2018-08",
+      "apartment": 190,
+      "building": 1437,
+      "elevatorApartment": 118,
+      "townhouse": 574,
+      "land": 523
+    },
+    {
+      "month": "2018-09",
+      "apartment": 180,
+      "building": 1362,
+      "elevatorApartment": 125,
+      "townhouse": 598,
+      "land": 561
+    },
+    {
+      "month": "2018-10",
+      "apartment": 252,
+      "building": 1624,
+      "elevatorApartment": 138,
+      "townhouse": 727,
+      "land": 555
+    },
+    {
+      "month": "2018-11",
+      "apartment": 219,
+      "building": 1260,
+      "elevatorApartment": 160,
+      "townhouse": 635,
+      "land": 630
+    },
+    {
+      "month": "2018-12",
+      "apartment": 277,
+      "building": 2014,
+      "elevatorApartment": 193,
+      "townhouse": 776,
+      "land": 656
+    },
+    {
+      "month": "2019-01",
+      "apartment": 248,
+      "building": 1741,
+      "elevatorApartment": 184,
+      "townhouse": 743,
+      "land": 665
+    },
+    {
+      "month": "2019-02",
+      "apartment": 190,
+      "building": 1314,
+      "elevatorApartment": 171,
+      "townhouse": 516,
+      "land": 425
+    },
+    {
+      "month": "2019-03",
+      "apartment": 287,
+      "building": 2282,
+      "elevatorApartment": 208,
+      "townhouse": 879,
+      "land": 762
+    },
+    {
+      "month": "2019-04",
+      "apartment": 296,
+      "building": 2053,
+      "elevatorApartment": 235,
+      "townhouse": 869,
+      "land": 676
+    },
+    {
+      "month": "2019-05",
+      "apartment": 301,
+      "building": 1902,
+      "elevatorApartment": 177,
+      "townhouse": 772,
+      "land": 775
+    },
+    {
+      "month": "2019-06",
+      "apartment": 237,
+      "building": 1691,
+      "elevatorApartment": 190,
+      "townhouse": 650,
+      "land": 584
+    },
+    {
+      "month": "2019-07",
+      "apartment": 252,
+      "building": 1884,
+      "elevatorApartment": 191,
+      "townhouse": 752,
+      "land": 727
+    },
+    {
+      "month": "2019-08",
+      "apartment": 249,
+      "building": 1581,
+      "elevatorApartment": 192,
+      "townhouse": 627,
+      "land": 583
+    },
+    {
+      "month": "2019-09",
+      "apartment": 244,
+      "building": 1762,
+      "elevatorApartment": 253,
+      "townhouse": 776,
+      "land": 549
+    },
+    {
+      "month": "2019-10",
+      "apartment": 300,
+      "building": 1805,
+      "elevatorApartment": 221,
+      "townhouse": 762,
+      "land": 633
+    },
+    {
+      "month": "2019-11",
+      "apartment": 285,
+      "building": 1742,
+      "elevatorApartment": 221,
+      "townhouse": 746,
+      "land": 574
+    },
+    {
+      "month": "2019-12",
+      "apartment": 263,
+      "building": 1898,
+      "elevatorApartment": 231,
+      "townhouse": 794,
+      "land": 625
+    },
+    {
+      "month": "2020-01",
+      "apartment": 198,
+      "building": 1486,
+      "elevatorApartment": 143,
+      "townhouse": 549,
+      "land": 396
+    },
+    {
+      "month": "2020-02",
+      "apartment": 240,
+      "building": 1561,
+      "elevatorApartment": 182,
+      "townhouse": 708,
+      "land": 535
+    },
+    {
+      "month": "2020-03",
+      "apartment": 272,
+      "building": 1620,
+      "elevatorApartment": 228,
+      "townhouse": 828,
+      "land": 553
+    },
+    {
+      "month": "2020-04",
+      "apartment": 241,
+      "building": 1548,
+      "elevatorApartment": 168,
+      "townhouse": 683,
+      "land": 644
+    },
+    {
+      "month": "2020-05",
+      "apartment": 257,
+      "building": 2071,
+      "elevatorApartment": 218,
+      "townhouse": 838,
+      "land": 605
+    },
+    {
+      "month": "2020-06",
+      "apartment": 273,
+      "building": 2289,
+      "elevatorApartment": 241,
+      "townhouse": 886,
+      "land": 628
+    },
+    {
+      "month": "2020-07",
+      "apartment": 307,
+      "building": 2644,
+      "elevatorApartment": 276,
+      "townhouse": 919,
+      "land": 779
+    },
+    {
+      "month": "2020-08",
+      "apartment": 257,
+      "building": 2426,
+      "elevatorApartment": 276,
+      "townhouse": 829,
+      "land": 618
+    },
+    {
+      "month": "2020-09",
+      "apartment": 277,
+      "building": 2502,
+      "elevatorApartment": 264,
+      "townhouse": 894,
+      "land": 794
+    },
+    {
+      "month": "2020-10",
+      "apartment": 307,
+      "building": 2562,
+      "elevatorApartment": 234,
+      "townhouse": 1040,
+      "land": 787
+    },
+    {
+      "month": "2020-11",
+      "apartment": 286,
+      "building": 2539,
+      "elevatorApartment": 308,
+      "townhouse": 970,
+      "land": 1008
+    },
+    {
+      "month": "2020-12",
+      "apartment": 279,
+      "building": 2038,
+      "elevatorApartment": 355,
+      "townhouse": 962,
+      "land": 860
+    },
+    {
+      "month": "2021-01",
+      "apartment": 240,
+      "building": 2311,
+      "elevatorApartment": 272,
+      "townhouse": 812,
+      "land": 660
+    },
+    {
+      "month": "2021-02",
+      "apartment": 196,
+      "building": 1650,
+      "elevatorApartment": 234,
+      "townhouse": 554,
+      "land": 678
+    },
+    {
+      "month": "2021-03",
+      "apartment": 361,
+      "building": 2435,
+      "elevatorApartment": 387,
+      "townhouse": 1053,
+      "land": 850
+    },
+    {
+      "month": "2021-04",
+      "apartment": 292,
+      "building": 2134,
+      "elevatorApartment": 342,
+      "townhouse": 931,
+      "land": 751
+    },
+    {
+      "month": "2021-05",
+      "apartment": 286,
+      "building": 1612,
+      "elevatorApartment": 269,
+      "townhouse": 782,
+      "land": 671
+    },
+    {
+      "month": "2021-06",
+      "apartment": 184,
+      "building": 1162,
+      "elevatorApartment": 275,
+      "townhouse": 586,
+      "land": 548
+    },
+    {
+      "month": "2021-07",
+      "apartment": 279,
+      "building": 1659,
+      "elevatorApartment": 259,
+      "townhouse": 830,
+      "land": 644
+    },
+    {
+      "month": "2021-08",
+      "apartment": 242,
+      "building": 1992,
+      "elevatorApartment": 294,
+      "townhouse": 759,
+      "land": 702
+    },
+    {
+      "month": "2021-09",
+      "apartment": 328,
+      "building": 3223,
+      "elevatorApartment": 371,
+      "townhouse": 1039,
+      "land": 742
+    },
+    {
+      "month": "2021-10",
+      "apartment": 329,
+      "building": 2750,
+      "elevatorApartment": 408,
+      "townhouse": 997,
+      "land": 706
+    },
+    {
+      "month": "2021-11",
+      "apartment": 351,
+      "building": 2390,
+      "elevatorApartment": 377,
+      "townhouse": 1046,
+      "land": 846
+    },
+    {
+      "month": "2021-12",
+      "apartment": 382,
+      "building": 2826,
+      "elevatorApartment": 436,
+      "townhouse": 970,
+      "land": 959
+    },
+    {
+      "month": "2022-01",
+      "apartment": 289,
+      "building": 1538,
+      "elevatorApartment": 353,
+      "townhouse": 678,
+      "land": 697
+    },
+    {
+      "month": "2022-02",
+      "apartment": 245,
+      "building": 1230,
+      "elevatorApartment": 303,
+      "townhouse": 613,
+      "land": 531
+    },
+    {
+      "month": "2022-03",
+      "apartment": 377,
+      "building": 1607,
+      "elevatorApartment": 337,
+      "townhouse": 827,
+      "land": 952
+    },
+    {
+      "month": "2022-04",
+      "apartment": 294,
+      "building": 1454,
+      "elevatorApartment": 312,
+      "townhouse": 762,
+      "land": 768
+    },
+    {
+      "month": "2022-05",
+      "apartment": 260,
+      "building": 1307,
+      "elevatorApartment": 328,
+      "townhouse": 666,
+      "land": 661
+    },
+    {
+      "month": "2022-06",
+      "apartment": 236,
+      "building": 1113,
+      "elevatorApartment": 265,
+      "townhouse": 618,
+      "land": 799
+    },
+    {
+      "month": "2022-07",
+      "apartment": 244,
+      "building": 1129,
+      "elevatorApartment": 304,
+      "townhouse": 598,
+      "land": 640
+    },
+    {
+      "month": "2022-08",
+      "apartment": 218,
+      "building": 1005,
+      "elevatorApartment": 214,
+      "townhouse": 531,
+      "land": 653
+    },
+    {
+      "month": "2022-09",
+      "apartment": 251,
+      "building": 1078,
+      "elevatorApartment": 275,
+      "townhouse": 599,
+      "land": 684
+    },
+    {
+      "month": "2022-10",
+      "apartment": 245,
+      "building": 929,
+      "elevatorApartment": 275,
+      "townhouse": 637,
+      "land": 583
+    },
+    {
+      "month": "2022-11",
+      "apartment": 241,
+      "building": 904,
+      "elevatorApartment": 214,
+      "townhouse": 495,
+      "land": 629
+    },
+    {
+      "month": "2022-12",
+      "apartment": 216,
+      "building": 1008,
+      "elevatorApartment": 251,
+      "townhouse": 648,
+      "land": 720
+    },
+    {
+      "month": "2023-01",
+      "apartment": 159,
+      "building": 790,
+      "elevatorApartment": 187,
+      "townhouse": 399,
+      "land": 451
+    },
+    {
+      "month": "2023-02",
+      "apartment": 231,
+      "building": 1135,
+      "elevatorApartment": 267,
+      "townhouse": 616,
+      "land": 633
+    },
+    {
+      "month": "2023-03",
+      "apartment": 291,
+      "building": 1460,
+      "elevatorApartment": 350,
+      "townhouse": 726,
+      "land": 733
+    },
+    {
+      "month": "2023-04",
+      "apartment": 267,
+      "building": 1441,
+      "elevatorApartment": 275,
+      "townhouse": 668,
+      "land": 660
+    },
+    {
+      "month": "2023-05",
+      "apartment": 279,
+      "building": 1517,
+      "elevatorApartment": 309,
+      "townhouse": 646,
+      "land": 751
+    },
+    {
+      "month": "2023-06",
+      "apartment": 228,
+      "building": 1530,
+      "elevatorApartment": 273,
+      "townhouse": 629,
+      "land": 563
+    },
+    {
+      "month": "2023-07",
+      "apartment": 242,
+      "building": 1378,
+      "elevatorApartment": 281,
+      "townhouse": 619,
+      "land": 707
+    },
+    {
+      "month": "2023-08",
+      "apartment": 234,
+      "building": 1570,
+      "elevatorApartment": 306,
+      "townhouse": 644,
+      "land": 646
+    },
+    {
+      "month": "2023-09",
+      "apartment": 243,
+      "building": 1626,
+      "elevatorApartment": 328,
+      "townhouse": 600,
+      "land": 624
+    },
+    {
+      "month": "2023-10",
+      "apartment": 252,
+      "building": 1765,
+      "elevatorApartment": 334,
+      "townhouse": 719,
+      "land": 649
+    },
+    {
+      "month": "2023-11",
+      "apartment": 300,
+      "building": 1859,
+      "elevatorApartment": 351,
+      "townhouse": 786,
+      "land": 723
+    },
+    {
+      "month": "2023-12",
+      "apartment": 268,
+      "building": 2014,
+      "elevatorApartment": 378,
+      "townhouse": 821,
+      "land": 837
+    },
+    {
+      "month": "2024-01",
+      "apartment": 281,
+      "building": 2272,
+      "elevatorApartment": 374,
+      "townhouse": 841,
+      "land": 728
+    },
+    {
+      "month": "2024-02",
+      "apartment": 198,
+      "building": 2053,
+      "elevatorApartment": 374,
+      "townhouse": 562,
+      "land": 557
+    },
+    {
+      "month": "2024-03",
+      "apartment": 329,
+      "building": 2993,
+      "elevatorApartment": 519,
+      "townhouse": 987,
+      "land": 892
+    },
+    {
+      "month": "2024-04",
+      "apartment": 277,
+      "building": 2650,
+      "elevatorApartment": 406,
+      "townhouse": 865,
+      "land": 828
+    },
+    {
+      "month": "2024-05",
+      "apartment": 325,
+      "building": 2680,
+      "elevatorApartment": 453,
+      "townhouse": 936,
+      "land": 883
+    },
+    {
+      "month": "2024-06",
+      "apartment": 329,
+      "building": 2942,
+      "elevatorApartment": 462,
+      "townhouse": 855,
+      "land": 816
+    },
+    {
+      "month": "2024-07",
+      "apartment": 270,
+      "building": 2420,
+      "elevatorApartment": 381,
+      "townhouse": 767,
+      "land": 804
+    },
+    {
+      "month": "2024-08",
+      "apartment": 216,
+      "building": 1501,
+      "elevatorApartment": 273,
+      "townhouse": 600,
+      "land": 736
+    },
+    {
+      "month": "2024-09",
+      "apartment": 165,
+      "building": 970,
+      "elevatorApartment": 287,
+      "townhouse": 487,
+      "land": 710
+    },
+    {
+      "month": "2024-10",
+      "apartment": 155,
+      "building": 749,
+      "elevatorApartment": 203,
+      "townhouse": 443,
+      "land": 594
+    },
+    {
+      "month": "2024-11",
+      "apartment": 240,
+      "building": 864,
+      "elevatorApartment": 208,
+      "townhouse": 482,
+      "land": 665
+    },
+    {
+      "month": "2024-12",
+      "apartment": 210,
+      "building": 846,
+      "elevatorApartment": 262,
+      "townhouse": 560,
+      "land": 743
+    },
+    {
+      "month": "2025-01",
+      "apartment": 124,
+      "building": 712,
+      "elevatorApartment": 145,
+      "townhouse": 435,
+      "land": 426
+    },
+    {
+      "month": "2025-02",
+      "apartment": 167,
+      "building": 792,
+      "elevatorApartment": 215,
+      "townhouse": 449,
+      "land": 470
+    },
+    {
+      "month": "2025-03",
+      "apartment": 232,
+      "building": 974,
+      "elevatorApartment": 269,
+      "townhouse": 508,
+      "land": 621
+    },
+    {
+      "month": "2025-04",
+      "apartment": 190,
+      "building": 717,
+      "elevatorApartment": 206,
+      "townhouse": 483,
+      "land": 521
+    },
+    {
+      "month": "2025-05",
+      "apartment": 182,
+      "building": 733,
+      "elevatorApartment": 211,
+      "townhouse": 470,
+      "land": 576
+    },
+    {
+      "month": "2025-06",
+      "apartment": 166,
+      "building": 820,
+      "elevatorApartment": 183,
+      "townhouse": 383,
+      "land": 562
+    },
+    {
+      "month": "2025-07",
+      "apartment": 108,
+      "building": 653,
+      "elevatorApartment": 149,
+      "townhouse": 354,
+      "land": 499
+    },
+    {
+      "month": "2025-08",
+      "apartment": 137,
+      "building": 639,
+      "elevatorApartment": 145,
+      "townhouse": 387,
+      "land": 447
+    },
+    {
+      "month": "2025-09",
+      "apartment": 133,
+      "building": 673,
+      "elevatorApartment": 143,
+      "townhouse": 362,
+      "land": 488
+    },
+    {
+      "month": "2025-10",
+      "apartment": 150,
+      "building": 775,
+      "elevatorApartment": 187,
+      "townhouse": 395,
+      "land": 452
+    },
+    {
+      "month": "2025-11",
+      "apartment": 141,
+      "building": 730,
+      "elevatorApartment": 145,
+      "townhouse": 408,
+      "land": 440
+    },
+    {
+      "month": "2025-12",
+      "apartment": 165,
+      "building": 730,
+      "elevatorApartment": 159,
+      "townhouse": 427,
+      "land": 610
+    },
+    {
+      "month": "2026-01",
+      "apartment": 144,
+      "building": 790,
+      "elevatorApartment": 185,
+      "townhouse": 450,
+      "land": 440
+    },
+    {
+      "month": "2026-02",
+      "apartment": 109,
+      "building": 525,
+      "elevatorApartment": 106,
+      "townhouse": 252,
+      "land": 573
+    },
+    {
+      "month": "2026-03",
+      "apartment": 156,
+      "building": 803,
+      "elevatorApartment": 162,
+      "townhouse": 418,
+      "land": 439
+    },
+    {
+      "month": "2026-04",
+      "apartment": 118,
+      "building": 611,
+      "elevatorApartment": 129,
+      "townhouse": 293,
+      "land": 299
+    },
+    {
+      "month": "2026-05",
+      "apartment": 59,
+      "building": 301,
+      "elevatorApartment": 64,
+      "townhouse": 137,
+      "land": 196
+    },
+    {
+      "month": "2026-06",
+      "apartment": 26,
+      "building": 65,
+      "elevatorApartment": 21,
+      "townhouse": 44,
+      "land": 78
+    }
+  ],
+  "latestVolumeStatistics": {
+    "month": "2026-03",
+    "total": 3237,
+    "land": 452,
+    "townhouse": 499,
+    "apartment": 162,
+    "elevatorApartment": 303,
+    "building": 1794,
+    "parking": 27,
+    "other": 0,
+    "sourceName": "高雄市政府地政局不動產買賣交易類型件數統計",
+    "sourceUrl": "https://landp.kcg.gov.tw/News_Content/2556/217874/",
+    "sourceFileName": "11242-06-10(11503).xlsx",
+    "generatedAt": "2026-07-23T02:55:43.766Z"
+  }
+}

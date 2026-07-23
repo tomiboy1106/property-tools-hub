@@ -2,15 +2,18 @@
 import { InitialScrollReset } from "@/components/initial-scroll-reset";
 import "./globals.css";
 
-const title = "房地產全方位｜買賣稅務試算";
-const description = "岠鋐不動產事業製作";
+const title = "岠鋐不動產官方網站";
+const description = "提供稅務、自備款試算、房市新聞最佳輔助";
+const creator = "JU HONG Ryan製作";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://property-tools-homepage.vercel.app"),
   title,
   description,
-  applicationName: "房地產全方位",
-  authors: [{ name: "岠鋐不動產事業" }],
+  applicationName: title,
+  authors: [{ name: creator }],
+  creator,
+  publisher: "岠鋐不動產事業",
   alternates: {
     canonical: "/",
   },
@@ -18,7 +21,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "zh_TW",
     url: "/",
-    siteName: "房地產全方位",
+    siteName: title,
     title,
     description,
     images: [
@@ -26,7 +29,7 @@ export const metadata: Metadata = {
         url: "/og-preview.jpg",
         width: 1729,
         height: 910,
-        alt: "岠鋐團隊不動產財務試算",
+        alt: "岠鋐不動產官方網站｜提供稅務、自備款試算、房市新聞最佳輔助",
       },
     ],
   },
@@ -39,6 +42,9 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  other: {
+    note: creator,
   },
 };
 

@@ -6,7 +6,7 @@ type ToolCardProps = {
   label: string;
   title: string;
   description: string;
-  items: string[];
+  items?: string[];
   buttonLabel: string;
   href: string;
   icon: LucideIcon;
@@ -30,14 +30,16 @@ export function ToolCard({
       <p className="tool-label">{label}</p>
       <h3>{title}</h3>
       <p className="tool-description">{description}</p>
-      <ul className="tool-points">
-        {items.map((item) => (
-          <li key={item}>
-            <CheckCircle2 size={18} aria-hidden="true" />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
+      {items && items.length > 0 && (
+        <ul className="tool-points">
+          {items.map((item) => (
+            <li key={item}>
+              <CheckCircle2 size={18} aria-hidden="true" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      )}
       <a className="tool-button" href={href}>
         {buttonLabel}
         <ArrowRight size={18} aria-hidden="true" />

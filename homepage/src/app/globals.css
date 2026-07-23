@@ -203,14 +203,14 @@ button {
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.12rem;
 }
 
 .nav-link {
-  padding: 0.7rem 0.85rem;
+  padding: 0.65rem 0.62rem;
   border-radius: 8px;
   color: #42515a;
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   font-weight: 600;
   transition: color 160ms ease, background 160ms ease;
 }
@@ -254,6 +254,92 @@ button {
   height: 100%;
   background: linear-gradient(transparent, rgba(35, 60, 13, 0.11), transparent);
   content: "";
+}
+
+.team-section {
+  padding: 2.4rem 0 0;
+  background: white;
+}
+
+.team-card {
+  position: relative;
+  display: grid;
+  padding: clamp(1.5rem, 4vw, 2.3rem);
+  align-items: center;
+  grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+  gap: clamp(1.2rem, 4vw, 2.4rem);
+  border: 1px solid #eadf9b;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 98% 0, rgba(255, 209, 16, 0.16), transparent 26%),
+    linear-gradient(180deg, #fffef7 0%, white 100%);
+  box-shadow: 0 16px 38px rgba(35, 42, 20, 0.075);
+}
+
+.team-copy h2 {
+  max-width: 560px;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.65rem, 3.4vw, 2.65rem);
+  letter-spacing: -0.04em;
+  line-height: 1.28;
+}
+
+.team-copy p:last-child {
+  max-width: 640px;
+  margin: 1rem 0 0;
+  color: var(--muted);
+  line-height: 1.85;
+}
+
+.team-strengths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.team-strength {
+  min-height: 162px;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.team-strength-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 0.75rem;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--yellow);
+  color: var(--green-dark);
+}
+
+.team-strength h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.team-strength p {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.team-note {
+  display: flex;
+  width: fit-content;
+  padding: 0.6rem 0.75rem;
+  align-items: center;
+  gap: 0.45rem;
+  grid-column: 1 / -1;
+  border-radius: 10px;
+  background: var(--green-dark);
+  color: white;
+  font-size: 0.86rem;
 }
 
 .hero-grid {
@@ -480,6 +566,7 @@ button {
 }
 
 .tools-section {
+  padding: 4.5rem 0;
   border-top: 1px solid var(--line);
   background: #f8f8f5;
 }
@@ -514,16 +601,17 @@ button {
 
 .tools-grid {
   display: grid;
-  margin-top: 3rem;
+  width: min(900px, 100%);
+  margin: 2.2rem auto 0;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .tool-card {
   position: relative;
   display: flex;
-  min-height: 470px;
-  padding: 2.1rem;
+  min-height: 248px;
+  padding: 1.35rem;
   overflow: hidden;
   flex-direction: column;
   border: 1px solid var(--line);
@@ -550,10 +638,10 @@ button {
 
 .tool-card::after {
   position: absolute;
-  top: -70px;
-  right: -70px;
-  width: 190px;
-  height: 190px;
+  top: -48px;
+  right: -48px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   content: "";
 }
@@ -570,11 +658,11 @@ button {
   position: relative;
   z-index: 1;
   display: grid;
-  width: 54px;
-  height: 54px;
-  margin-bottom: 1.5rem;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 1rem;
   place-items: center;
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
 .green .tool-card-icon {
@@ -604,13 +692,14 @@ button {
 
 .tool-card h3 {
   margin: 0;
-  font-size: 1.7rem;
+  font-size: 1.24rem;
   letter-spacing: -0.025em;
 }
 
 .tool-description {
-  margin: 1rem 0 1.2rem;
+  margin: 0.65rem 0 1rem;
   color: var(--muted);
+  font-size: 0.92rem;
   line-height: 1.75;
 }
 
@@ -645,8 +734,10 @@ button {
 .tool-button {
   width: 100%;
   margin-top: auto;
-  padding: 0.8rem 1rem;
+  min-height: 44px;
+  padding: 0.68rem 0.9rem;
   color: white;
+  font-size: 0.92rem;
 }
 
 .green .tool-button {
@@ -674,6 +765,36 @@ button {
 
 .tool-button svg {
   transition: transform 150ms ease;
+}
+
+.tools-inline-notice {
+  display: flex;
+  width: min(900px, 100%);
+  margin: 1rem auto 0;
+  padding: 1rem 1.1rem;
+  align-items: flex-start;
+  gap: 0.85rem;
+  border: 1px solid #e5da9e;
+  border-radius: 14px;
+  background: var(--yellow-soft);
+}
+
+.tools-inline-notice .notice-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+}
+
+.tools-inline-notice h3 {
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+.tools-inline-notice p {
+  margin: 0.35rem 0 0;
+  color: #53656c;
+  font-size: 0.84rem;
+  line-height: 1.75;
 }
 
 .process-section {
@@ -794,6 +915,385 @@ button {
 
 .notice-section {
   padding: 5rem 0 2.5rem;
+}
+
+.news-section {
+  border-top: 1px solid var(--line);
+  background: white;
+}
+
+.news-grid {
+  display: grid;
+  margin-top: 3rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.news-card {
+  display: flex;
+  min-height: 265px;
+  padding: 1.25rem;
+  flex-direction: column;
+  border: 1px solid #e6d37c;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 249, 217, 0.52), transparent 46%),
+    white;
+  box-shadow: 0 10px 26px rgba(39, 51, 56, 0.045);
+}
+
+.news-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #7a690d;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.news-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.news-card h3 {
+  margin: 1rem 0 0;
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+}
+
+.news-card p {
+  margin: 0.8rem 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+.news-card a {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: auto;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--green-dark);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: var(--yellow);
+  text-decoration-thickness: 0.18em;
+  text-underline-offset: 0.18em;
+}
+
+.news-card a:hover {
+  color: #8c7600;
+}
+
+.news-source-note,
+.market-method-note,
+.market-category-note {
+  margin: 1.1rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.market-section {
+  border-top: 1px solid var(--line);
+  background: #f8f8f5;
+}
+
+.market-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.market-source-box {
+  display: grid;
+  min-width: 210px;
+  padding: 1rem;
+  gap: 0.28rem;
+  border: 1px solid #e7d781;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 8px 22px rgba(39, 51, 56, 0.045);
+}
+
+.market-source-box span {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.market-source-box strong {
+  font-size: 1.05rem;
+}
+
+.market-source-box a {
+  color: #7c6700;
+  font-size: 0.84rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.market-chart-grid {
+  display: grid;
+  margin-top: 2.4rem;
+  gap: 1.25rem;
+}
+
+.market-chart-card {
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 10px 26px rgba(39, 51, 56, 0.045);
+}
+
+.market-chart-card figcaption {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.market-chart-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.market-chart-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.market-chart-card p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.market-price-summary {
+  display: flex;
+  width: fit-content;
+  margin: 0.2rem 0 0.9rem 3.1rem;
+  padding: 0.6rem 0.75rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.75rem;
+  border: 1px solid #ead45d;
+  border-radius: 12px;
+  background: var(--yellow-soft);
+}
+
+.market-price-summary span,
+.market-price-summary small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.market-price-summary strong {
+  color: var(--green-dark);
+  font-size: 1.02rem;
+}
+
+.market-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.interactive-price-chart {
+  cursor: crosshair;
+  touch-action: pan-y;
+}
+
+.chart-axis {
+  stroke: #b9b4a8;
+  stroke-width: 1;
+}
+
+.chart-grid-line {
+  stroke: #ece8dc;
+  stroke-width: 1;
+}
+
+.chart-y-label,
+.chart-x-label {
+  fill: #7b8275;
+  font-size: 12px;
+  text-anchor: end;
+}
+
+.chart-x-label {
+  text-anchor: middle;
+}
+
+.price-line {
+  fill: none;
+  stroke: var(--green-dark);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.price-area {
+  fill: rgba(255, 209, 16, 0.22);
+}
+
+.chart-crosshair {
+  stroke: rgba(35, 60, 13, 0.34);
+  stroke-dasharray: 5 5;
+  stroke-width: 1;
+}
+
+.chart-active-dot {
+  fill: var(--yellow);
+  stroke: var(--green-dark);
+  stroke-width: 3;
+}
+
+.chart-tooltip-box {
+  fill: rgba(24, 25, 22, 0.92);
+}
+
+.chart-tooltip-title {
+  fill: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+}
+
+.chart-tooltip-value {
+  fill: white;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.market-chart-slider-label {
+  display: grid;
+  margin-top: 0.75rem;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.market-chart-slider {
+  width: 100%;
+  accent-color: var(--yellow);
+  cursor: pointer;
+}
+
+.latest-volume-card {
+  overflow: hidden;
+}
+
+.latest-volume-bars {
+  display: grid;
+  min-height: 310px;
+  padding: 1.35rem 1rem 0;
+  align-items: end;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.85rem, 3vw, 2rem);
+  border: 1px solid #e7ddb7;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.38), transparent 45%),
+    #f4eddb;
+}
+
+.latest-volume-item {
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  gap: 0.38rem;
+  color: var(--ink);
+  text-align: center;
+}
+
+.latest-volume-bar-shell {
+  display: flex;
+  width: 100%;
+  max-width: 86px;
+  height: 220px;
+  align-items: end;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  border-radius: 14px 14px 0 0;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.latest-volume-bar {
+  display: block;
+  width: 72%;
+  min-height: 8px;
+  border-radius: 11px 11px 0 0;
+  box-shadow: 0 10px 20px rgba(35, 49, 56, 0.08);
+}
+
+.latest-volume-item strong {
+  font-size: 1.12rem;
+  line-height: 1;
+}
+
+.latest-volume-item span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.latest-volume-extra {
+  display: flex;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.latest-volume-extra span {
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #e5dba9;
+  border-radius: 8px;
+  background: #fffaf0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.market-legend {
+  display: flex;
+  margin-top: 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.7rem 1rem;
+}
+
+.market-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  color: #4a4e44;
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.market-legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
 }
 
 .notice-box {
@@ -1103,6 +1603,18 @@ button {
     padding: 0.8rem 0.9rem;
   }
 
+  .team-card {
+    grid-template-columns: 1fr;
+  }
+
+  .team-strengths {
+    grid-template-columns: 1fr;
+  }
+
+  .team-strength {
+    min-height: auto;
+  }
+
   .hero-section {
     padding: 4.5rem 0 5rem;
   }
@@ -1130,6 +1642,19 @@ button {
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .market-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .market-source-box {
+    min-width: 0;
+  }
 }
 
 @media (max-width: 700px) {
@@ -1143,6 +1668,20 @@ button {
 
   .hero-section {
     padding: 3.4rem 0 4rem;
+  }
+
+  .team-section {
+    padding-top: 1.5rem;
+  }
+
+  .team-card {
+    padding: 1.2rem;
+    border-radius: 18px;
+  }
+
+  .team-note {
+    width: 100%;
+    align-items: flex-start;
   }
 
   .hero-copy h1 {
@@ -1211,6 +1750,10 @@ button {
     margin-top: 0.4rem;
   }
 
+  .tools-inline-notice {
+    flex-direction: column;
+  }
+
   .steps-list {
     grid-template-columns: 1fr;
     gap: 0;
@@ -1247,6 +1790,19 @@ button {
 
   .feature-item {
     padding: 1rem;
+  }
+
+  .news-card {
+    min-height: auto;
+  }
+
+  .market-chart-card {
+    padding: 1rem;
+    overflow-x: auto;
+  }
+
+  .market-chart {
+    min-width: 760px;
   }
 
   .notice-section {
