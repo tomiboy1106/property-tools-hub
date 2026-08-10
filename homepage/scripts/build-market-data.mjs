@@ -2,13 +2,16 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { unzipSync, strFromU8 } from "fflate";
+import { PDFParse } from "pdf-parse";
 
 const CURRENT_DATA_URL =
   "https://plvr.land.moi.gov.tw/Download?fileName=lvr_landcsv.zip&type=zip";
 const SEASON_DATA_URL = (season) =>
   `https://plvr.land.moi.gov.tw/DownloadSeason?season=${season}&type=zip&fileName=lvr_landcsv.zip`;
 const SOURCE_PAGE_URL = "https://data.gov.tw/dataset/77051";
-const KCG_VOLUME_PAGE_URL = "https://landp.kcg.gov.tw/News_Content/2556/217874/";
+const KCG_VOLUME_INDEX_URL = "https://landp.kcg.gov.tw/News/2556/";
+const KCG_VOLUME_ORIGIN = "https://landp.kcg.gov.tw";
+const TARGET_REPORT_NAME = "高雄市不動產買賣交易類型件數統計";
 const CACHE_DIR = path.join(process.cwd(), ".market-data-cache");
 const OUTPUT_PATH = path.join(process.cwd(), "src", "data", "kaohsiung-market-stats.json");
 const KAOHSIUNG_MAIN_FILE = "e_lvr_land_a.csv";
@@ -56,11 +59,11 @@ async function downloadZip(name, url) {
   return buffer;
 }
 
-async function downloadFile(name, url) {
+async function downloadFile(name, url, useCache = true) {
   await mkdir(CACHE_DIR, { recursive: true });
   const cachePath = path.join(CACHE_DIR, name);
 
-  if (existsSync(cachePath)) {
+  if (useCache && existsSync(cachePath)) {
     return readFile(cachePath);
   }
 
@@ -79,16 +82,6 @@ async function downloadFile(name, url) {
   return buffer;
 }
 
-function decodeXml(value) {
-  return value
-    .replaceAll("&amp;", "&")
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&quot;", '"')
-    .replaceAll("&apos;", "'")
-    .trim();
-}
-
 function decodeHtml(value) {
   return value
     .replaceAll("&amp;", "&")
@@ -98,135 +91,127 @@ function decodeHtml(value) {
     .replaceAll("&#39;", "'");
 }
 
-function parseSharedStrings(xml) {
-  const matches = xml.match(/<si[\s\S]*?<\/si>/g) ?? [];
-
-  return matches.map((item) => {
-    const textMatches = item.match(/<t[^>]*>[\s\S]*?<\/t>/g) ?? [];
-
-    return textMatches.map((text) => decodeXml(text.replace(/<[^>]+>/g, ""))).join("");
-  });
+function rocMonthToIsoMonth(rocYear, month) {
+  return `${rocYear + 1911}-${String(month).padStart(2, "0")}`;
 }
 
-function parseSheetCells(xml, sharedStrings) {
-  const cells = new Map();
-  const matches = xml.match(/<c\b[\s\S]*?<\/c>|<c\b[^/>]*\/>/g) ?? [];
-
-  for (const cell of matches) {
-    const address = cell.match(/\br="([^"]+)"/)?.[1];
-    const rawValue = cell.match(/<v>([\s\S]*?)<\/v>/)?.[1];
-
-    if (!address || rawValue === undefined) {
-      continue;
-    }
-
-    if (cell.includes('t="s"')) {
-      cells.set(address, sharedStrings[Number(rawValue)] ?? "");
-    } else {
-      const numericValue = Number(rawValue);
-      cells.set(address, Number.isFinite(numericValue) ? numericValue : rawValue);
-    }
+function toNumber(value) {
+  if (value === "-") {
+    return 0;
   }
 
-  return cells;
+  return Number(value.replaceAll(",", ""));
 }
 
-function getCellText(cells, address) {
-  return String(cells.get(address) ?? "").replace(/\s+/g, "");
-}
-
-function parseKcgRocMonth(value) {
-  const match = value.match(/民國(\d+)年(\d+)月/);
+function parseReportPdfLink(filesHtml) {
+  const normalizedHtml = filesHtml
+    .replaceAll('\\"', '"')
+    .replaceAll("\\/", "/")
+    .replaceAll("\\r", "\r")
+    .replaceAll("\\n", "\n");
+  const match = normalizedHtml.match(
+    /<a[^>]*href="([^"]+)"[^>]*class="pdf"[^>]*>([^<]*)<\/a>/,
+  );
 
   if (!match) {
-    throw new Error("KCG volume report month was not found");
-  }
-
-  return `${Number(match[1]) + 1911}-${String(Number(match[2])).padStart(2, "0")}`;
-}
-
-function findKcgMonth(cells) {
-  for (const value of cells.values()) {
-    if (String(value).includes("民國")) {
-      return parseKcgRocMonth(String(value));
-    }
-  }
-
-  throw new Error("KCG volume report month was not found");
-}
-
-function parseKcgFileName(downloadUrl) {
-  const encodedName = new URL(downloadUrl).searchParams.get("n");
-
-  if (!encodedName) {
-    return "高雄市不動產買賣交易類型件數統計.xlsx";
-  }
-
-  try {
-    return Buffer.from(encodedName, "base64").toString("utf8");
-  } catch {
-    return "高雄市不動產買賣交易類型件數統計.xlsx";
-  }
-}
-
-function parseKcgVolumeXlsx(buffer, sourceFileName) {
-  const entries = unzipSync(new Uint8Array(buffer));
-  const sharedStringsFile = entries["xl/sharedStrings.xml"];
-  const sheetFile = entries["xl/worksheets/sheet1.xml"];
-
-  if (!sharedStringsFile || !sheetFile) {
-    throw new Error("KCG xlsx structure is not supported");
-  }
-
-  const sharedStrings = parseSharedStrings(strFromU8(sharedStringsFile));
-  const cells = parseSheetCells(strFromU8(sheetFile), sharedStrings);
-  const month = findKcgMonth(cells);
-  let totalRow = 0;
-
-  for (let row = 1; row <= 80; row += 1) {
-    if (getCellText(cells, `A${row}`) === "總計") {
-      totalRow = row;
-      break;
-    }
-  }
-
-  if (!totalRow) {
-    throw new Error("KCG total row was not found");
+    return null;
   }
 
   return {
-    month,
-    total: Number(cells.get(`B${totalRow}`) ?? 0),
-    land: Number(cells.get(`C${totalRow}`) ?? 0),
-    townhouse: Number(cells.get(`D${totalRow}`) ?? 0),
-    apartment: Number(cells.get(`E${totalRow}`) ?? 0),
-    elevatorApartment: Number(cells.get(`F${totalRow}`) ?? 0),
-    building: Number(cells.get(`G${totalRow}`) ?? 0),
-    parking: Number(cells.get(`H${totalRow}`) ?? 0),
-    other: Number(cells.get(`I${totalRow}`) ?? 0),
-    sourceName: "高雄市政府地政局不動產買賣交易類型件數統計",
-    sourceUrl: KCG_VOLUME_PAGE_URL,
-    sourceFileName,
+    pdfUrl: decodeHtml(match[1]),
+    pdfFileName: decodeHtml(match[2]).trim() || "高雄市不動產買賣交易類型件數統計.pdf",
+  };
+}
+
+function parseReportCandidates(html) {
+  const reports = [];
+  const reportRegex =
+    /\{"年":"(\d+)年","月":"(\d+)月","報表名稱":"([^"]+)"[\s\S]*?"Path":"([^"]+)"[\s\S]*?"FilesHtml_ShowFileName":"([\s\S]*?)","FilesHtml_Info"/g;
+
+  for (const match of html.matchAll(reportRegex)) {
+    if (match[3] !== TARGET_REPORT_NAME) {
+      continue;
+    }
+
+    const pdf = parseReportPdfLink(match[5]);
+
+    if (!pdf) {
+      continue;
+    }
+
+    reports.push({
+      rocYear: Number(match[1]),
+      month: Number(match[2]),
+      path: match[4],
+      ...pdf,
+    });
+  }
+
+  return reports.sort((first, second) => {
+    return second.rocYear - first.rocYear || second.month - first.month;
+  });
+}
+
+function parseKcgVolumePdfText(text, candidate) {
+  const totalLine = text.match(
+    /總\s*計\s+([0-9,]+|-)\s+([0-9,]+|-)\s+([0-9,]+|-)\s+([0-9,]+|-)\s+([0-9,]+|-)\s+([0-9,]+|-)\s+([0-9,]+|-)\s+([0-9,]+|-)/,
+  );
+
+  if (!totalLine) {
+    throw new Error("KCG PDF total row was not found");
+  }
+
+  return {
+    month: rocMonthToIsoMonth(candidate.rocYear, candidate.month),
+    total: toNumber(totalLine[1]),
+    land: toNumber(totalLine[2]),
+    townhouse: toNumber(totalLine[3]),
+    apartment: toNumber(totalLine[4]),
+    elevatorApartment: toNumber(totalLine[5]),
+    building: toNumber(totalLine[6]),
+    parking: toNumber(totalLine[7]),
+    other: toNumber(totalLine[8]),
+    sourceName: "高雄市政府地政局不動產買賣交易類型件數統計 PDF",
+    sourceUrl: candidate.pdfUrl,
+    sourceFileName: candidate.pdfFileName,
     generatedAt: new Date().toISOString(),
   };
 }
 
-async function fetchKcgVolumeStatistics() {
-  const html = (await downloadFile("kcg-volume-page.html", KCG_VOLUME_PAGE_URL)).toString("utf8");
-  const links = Array.from(html.matchAll(/href="([^"]*Download\.ashx[^"]*)"/g)).map((match) =>
-    decodeHtml(match[1]),
-  );
-  const xlsxLink = links.find((link) => link.includes("Lnhsc3g") || link.includes(".xlsx"));
+async function extractPdfText(buffer) {
+  const parser = new PDFParse({ data: Buffer.from(buffer) });
 
-  if (!xlsxLink) {
-    throw new Error("KCG xlsx download link was not found");
+  try {
+    const result = await parser.getText();
+
+    return result.text;
+  } finally {
+    await parser.destroy();
+  }
+}
+
+async function fetchKcgVolumeStatistics() {
+  const html = (await downloadFile("kcg-volume-index.html", KCG_VOLUME_INDEX_URL, false)).toString("utf8");
+  const latestReport = parseReportCandidates(html)[0];
+
+  if (!latestReport) {
+    throw new Error("KCG latest PDF report was not found");
   }
 
-  const downloadUrl = xlsxLink.startsWith("http") ? xlsxLink : new URL(xlsxLink, KCG_VOLUME_PAGE_URL).href;
-  const sourceFileName = parseKcgFileName(downloadUrl);
-  const xlsxBuffer = await downloadFile("kcg-volume-latest.xlsx", downloadUrl);
+  const pdfUrl = latestReport.pdfUrl.startsWith("http")
+    ? latestReport.pdfUrl
+    : new URL(latestReport.pdfUrl, KCG_VOLUME_ORIGIN).href;
+  const pdfBuffer = await downloadFile(
+    `kcg-volume-${latestReport.rocYear}-${String(latestReport.month).padStart(2, "0")}.pdf`,
+    pdfUrl,
+    false,
+  );
+  const pdfText = await extractPdfText(pdfBuffer);
 
-  return parseKcgVolumeXlsx(xlsxBuffer, sourceFileName);
+  return parseKcgVolumePdfText(pdfText, {
+    ...latestReport,
+    pdfUrl,
+  });
 }
 
 function parseCsv(text) {
@@ -471,7 +456,7 @@ async function buildMarketData() {
     periodStart: `${START_YEAR}-01`,
     periodEnd: latestClosedMonth,
     methodology:
-      "平均單價取高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；成交量採高雄市政府地政局月報 Excel「總計」列，素地對應土地。",
+      "平均單價取高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；成交量採高雄市政府地政局月報 PDF「總計」列，素地對應土地。",
     processedFiles: processed,
     priceSeries,
     volumeSeries,

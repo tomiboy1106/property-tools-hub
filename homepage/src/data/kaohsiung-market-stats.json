@@ -2,10 +2,10 @@
   "city": "高雄市",
   "sourceName": "內政部不動產成交案件實際資訊資料供應系統",
   "sourceUrl": "https://data.gov.tw/dataset/77051",
-  "generatedAt": "2026-07-23T02:55:43.766Z",
+  "generatedAt": "2026-08-10T05:36:55.323Z",
   "periodStart": "2015-01",
-  "periodEnd": "2026-06",
-  "methodology": "平均單價取高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；成交量採高雄市政府地政局月報 Excel「總計」列，素地對應土地。",
+  "periodEnd": "2026-07",
+  "methodology": "平均單價取高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；成交量採高雄市政府地政局月報 PDF「總計」列，素地對應土地。",
   "processedFiles": [
     "104S1",
     "104S2",
@@ -745,6 +745,11 @@
       "month": "2026-06",
       "averagePricePerPing": 22.9,
       "transactions": 155
+    },
+    {
+      "month": "2026-07",
+      "averagePricePerPing": null,
+      "transactions": 0
     }
   ],
   "volumeSeries": [
@@ -1851,21 +1856,29 @@
       "elevatorApartment": 21,
       "townhouse": 44,
       "land": 78
+    },
+    {
+      "month": "2026-07",
+      "apartment": 0,
+      "building": 0,
+      "elevatorApartment": 0,
+      "townhouse": 0,
+      "land": 2
     }
   ],
   "latestVolumeStatistics": {
-    "month": "2026-03",
-    "total": 3237,
-    "land": 452,
-    "townhouse": 499,
-    "apartment": 162,
-    "elevatorApartment": 303,
-    "building": 1794,
-    "parking": 27,
+    "month": "2026-06",
+    "total": 3427,
+    "land": 593,
+    "townhouse": 442,
+    "apartment": 172,
+    "elevatorApartment": 230,
+    "building": 1974,
+    "parking": 16,
     "other": 0,
-    "sourceName": "高雄市政府地政局不動產買賣交易類型件數統計",
-    "sourceUrl": "https://landp.kcg.gov.tw/News_Content/2556/217874/",
-    "sourceFileName": "11242-06-10(11503).xlsx",
-    "generatedAt": "2026-07-23T02:55:43.766Z"
+    "sourceName": "高雄市政府地政局不動產買賣交易類型件數統計 PDF",
+    "sourceUrl": "https://landp-ws.kcg.gov.tw/Download.ashx?u=L0ZTMDEvRmlsZVBhdGgvMS9yZWxmaWxlLzk1MS8yMjEyMjAvZDM4NmI0MjUtN2JlMy00MjI3LTgzMDktZjg1NmFjODRhYTkwLnBkZg%3D%3D&n=MTEyNDItMDYtMTAoMTE1MDYpLnBkZi5wZGY%3D",
+    "sourceFileName": "11242-06-10(11506).pdf",
+    "generatedAt": "2026-08-10T05:36:55.323Z"
   }
 }
