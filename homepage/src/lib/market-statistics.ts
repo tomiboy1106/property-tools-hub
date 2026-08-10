@@ -1,4 +1,5 @@
 import { strFromU8, unzipSync } from "fflate";
+import { unstable_cache } from "next/cache";
 import marketStats from "@/data/kaohsiung-market-stats.json";
 import { fetchKcgVolumeStatistics } from "@/lib/kcg-volume-statistics";
 import { getRedis } from "@/lib/redis";
@@ -12,6 +13,13 @@ const CURRENT_DATA_URL =
 const MARKET_STATS_CACHE_KEY = "juhong:homepage:kaohsiung-market-stats";
 const KAOHSIUNG_MAIN_FILE = "e_lvr_land_a.csv";
 const PING_PER_SQUARE_METER = 0.3025;
+const LIVE_VOLUME_REVALIDATE_SECONDS = 60 * 60 * 24;
+
+const getCachedLiveVolumeStatistics = unstable_cache(
+  () => fetchKcgVolumeStatistics(),
+  ["juhong-homepage-kcg-volume-statistics"],
+  { revalidate: LIVE_VOLUME_REVALIDATE_SECONDS },
+);
 
 function getLatestClosedMonth(now = new Date()) {
   const closed = new Date(Date.UTC(now.getFullYear(), now.getMonth() - 1, 1));
@@ -188,7 +196,7 @@ async function fetchCurrentMonthStats(targetMonth: string) {
   };
 }
 
-export async function getMarketStats(): Promise<MarketStats> {
+async function getStoredMarketStats(): Promise<MarketStats> {
   const redis = getRedis();
 
   if (redis) {
@@ -202,13 +210,32 @@ export async function getMarketStats(): Promise<MarketStats> {
   return marketStats;
 }
 
+export async function getMarketStats(): Promise<MarketStats> {
+  const storedStats = await getStoredMarketStats();
+
+  if (getRedis()) {
+    return storedStats;
+  }
+
+  try {
+    const latestVolumeStatistics = await getCachedLiveVolumeStatistics();
+
+    return {
+      ...storedStats,
+      latestVolumeStatistics,
+    };
+  } catch {
+    return storedStats;
+  }
+}
+
 export async function refreshMarketStats() {
   const targetMonth = getLatestClosedMonth();
   const [latest, latestVolumeStatistics] = await Promise.all([
     fetchCurrentMonthStats(targetMonth),
     fetchKcgVolumeStatistics(),
   ]);
-  const currentStats = await getMarketStats();
+  const currentStats = await getStoredMarketStats();
   const priceSeries = currentStats.priceSeries.filter((item) => item.month !== targetMonth);
   const nextStats = {
     ...currentStats,

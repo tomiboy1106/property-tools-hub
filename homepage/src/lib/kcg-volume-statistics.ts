@@ -4,6 +4,12 @@ const KCG_VOLUME_INDEX_URL = "https://landp.kcg.gov.tw/News/2556/";
 const KCG_VOLUME_ORIGIN = "https://landp.kcg.gov.tw";
 const TARGET_REPORT_NAME = "高雄市不動產買賣交易類型件數統計";
 
+type KcgFetchOptions = RequestInit & {
+  next?: {
+    revalidate?: number;
+  };
+};
+
 export type KcgVolumeStatistics = {
   month: string;
   total: number;
@@ -141,13 +147,20 @@ async function extractPdfText(buffer: ArrayBuffer) {
   }
 }
 
-export async function fetchKcgVolumeStatistics() {
-  const pageResponse = await fetch(KCG_VOLUME_INDEX_URL, {
-    cache: "no-store",
+function createFetchOptions(revalidateSeconds?: number): KcgFetchOptions {
+  return {
+    ...(revalidateSeconds
+      ? { next: { revalidate: revalidateSeconds } }
+      : { cache: "no-store" as const }),
     headers: {
       "user-agent": "JuhongHomepage/1.0",
     },
-  });
+  };
+}
+
+export async function fetchKcgVolumeStatistics(options: { revalidateSeconds?: number } = {}) {
+  const fetchOptions = createFetchOptions(options.revalidateSeconds);
+  const pageResponse = await fetch(KCG_VOLUME_INDEX_URL, fetchOptions);
 
   if (!pageResponse.ok) {
     throw new Error(`KCG volume index fetch failed: ${pageResponse.status}`);
@@ -163,12 +176,7 @@ export async function fetchKcgVolumeStatistics() {
   const pdfUrl = latestReport.pdfUrl.startsWith("http")
     ? latestReport.pdfUrl
     : new URL(latestReport.pdfUrl, KCG_VOLUME_ORIGIN).href;
-  const fileResponse = await fetch(pdfUrl, {
-    cache: "no-store",
-    headers: {
-      "user-agent": "JuhongHomepage/1.0",
-    },
-  });
+  const fileResponse = await fetch(pdfUrl, fetchOptions);
 
   if (!fileResponse.ok) {
     throw new Error(`KCG PDF fetch failed: ${fileResponse.status}`);
