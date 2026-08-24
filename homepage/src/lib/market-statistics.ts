@@ -13,12 +13,20 @@ const CURRENT_DATA_URL =
 const MARKET_STATS_CACHE_KEY = "juhong:homepage:kaohsiung-market-stats";
 const KAOHSIUNG_MAIN_FILE = "e_lvr_land_a.csv";
 const PING_PER_SQUARE_METER = 0.3025;
-const LIVE_VOLUME_REVALIDATE_SECONDS = 60 * 60 * 24;
+const LIVE_MARKET_REVALIDATE_SECONDS = 60 * 60 * 24;
 
-const getCachedLiveVolumeStatistics = unstable_cache(
-  () => fetchKcgVolumeStatistics(),
-  ["juhong-homepage-kcg-volume-statistics"],
-  { revalidate: LIVE_VOLUME_REVALIDATE_SECONDS },
+const getCachedLiveMarketStats = unstable_cache(
+  async () => {
+    const targetMonth = getLatestClosedMonth();
+    const [latest, latestVolumeStatistics] = await Promise.all([
+      fetchCurrentMonthStats(targetMonth),
+      fetchKcgVolumeStatistics(),
+    ]);
+
+    return buildNextMarketStats(marketStats, targetMonth, latest, latestVolumeStatistics);
+  },
+  ["juhong-homepage-live-market-stats"],
+  { revalidate: LIVE_MARKET_REVALIDATE_SECONDS },
 );
 
 function getLatestClosedMonth(now = new Date()) {
@@ -210,6 +218,23 @@ async function getStoredMarketStats(): Promise<MarketStats> {
   return marketStats;
 }
 
+function buildNextMarketStats(
+  currentStats: MarketStats,
+  targetMonth: string,
+  latest: Awaited<ReturnType<typeof fetchCurrentMonthStats>>,
+  latestVolumeStatistics: Awaited<ReturnType<typeof fetchKcgVolumeStatistics>>,
+) {
+  const priceSeries = currentStats.priceSeries.filter((item) => item.month !== targetMonth);
+
+  return {
+    ...currentStats,
+    generatedAt: new Date().toISOString(),
+    periodEnd: targetMonth,
+    priceSeries: [...priceSeries, latest.price],
+    latestVolumeStatistics,
+  };
+}
+
 export async function getMarketStats(): Promise<MarketStats> {
   const storedStats = await getStoredMarketStats();
 
@@ -218,12 +243,7 @@ export async function getMarketStats(): Promise<MarketStats> {
   }
 
   try {
-    const latestVolumeStatistics = await getCachedLiveVolumeStatistics();
-
-    return {
-      ...storedStats,
-      latestVolumeStatistics,
-    };
+    return await getCachedLiveMarketStats();
   } catch {
     return storedStats;
   }
@@ -236,14 +256,7 @@ export async function refreshMarketStats() {
     fetchKcgVolumeStatistics(),
   ]);
   const currentStats = await getStoredMarketStats();
-  const priceSeries = currentStats.priceSeries.filter((item) => item.month !== targetMonth);
-  const nextStats = {
-    ...currentStats,
-    generatedAt: new Date().toISOString(),
-    periodEnd: targetMonth,
-    priceSeries: [...priceSeries, latest.price],
-    latestVolumeStatistics,
-  };
+  const nextStats = buildNextMarketStats(currentStats, targetMonth, latest, latestVolumeStatistics);
   const redis = getRedis();
 
   if (redis) {
