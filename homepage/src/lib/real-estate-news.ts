@@ -9,6 +9,7 @@ export type RealEstateNewsItem = {
 };
 
 const NEWS_CACHE_KEY = "juhong:homepage:real-estate-news";
+const NEWS_REVALIDATE_SECONDS = 60 * 60;
 const NEWS_PAGES = [
   "https://estate.ltn.com.tw/news",
   "https://estate.ltn.com.tw/thinking",
@@ -153,6 +154,19 @@ const OTHER_LOCAL_MARKET_KEYWORDS = [
   "馬祖",
 ];
 
+const OVERSEAS_MARKET_KEYWORDS = [
+  "日本",
+  "赴日",
+  "日圓",
+  "東京",
+  "大阪",
+  "海外",
+  "香港",
+  "中國",
+  "美國",
+  "東南亞",
+];
+
 function decodeEntities(value: string) {
   return value
     .replaceAll("<![CDATA[", "")
@@ -233,7 +247,17 @@ function isOtherLocalOnlyNews(item: Pick<RealEstateNewsItem, "title" | "summary"
   return OTHER_LOCAL_MARKET_KEYWORDS.some((keyword) => text.includes(keyword));
 }
 
+function isOverseasMarketNews(item: Pick<RealEstateNewsItem, "title" | "summary">) {
+  const text = `${item.title} ${item.summary}`;
+
+  return OVERSEAS_MARKET_KEYWORDS.some((keyword) => text.includes(keyword));
+}
+
 function isAllowedNews(item: Pick<RealEstateNewsItem, "title" | "summary">) {
+  if (isOverseasMarketNews(item)) {
+    return false;
+  }
+
   if (isKaohsiungNews(item)) {
     return true;
   }
@@ -281,7 +305,7 @@ function parseLtnListPage(html: string, pageUrl: string) {
 async function fetchArticleDetail(item: RealEstateNewsItem) {
   try {
     const response = await fetch(item.url, {
-      next: { revalidate: 60 * 60 * 24 },
+      next: { revalidate: NEWS_REVALIDATE_SECONDS },
       headers: {
         "user-agent": "Mozilla/5.0 JuhongHomepage/1.0",
       },
@@ -311,7 +335,7 @@ async function fetchNewsFromPages() {
   const results = await Promise.allSettled(
     NEWS_PAGES.map(async (pageUrl) => {
       const response = await fetch(pageUrl, {
-        next: { revalidate: 60 * 60 * 24 },
+        next: { revalidate: NEWS_REVALIDATE_SECONDS },
         headers: {
           "user-agent": "Mozilla/5.0 JuhongHomepage/1.0",
         },
