@@ -1,10 +1,9 @@
 import { strFromU8, unzipSync } from "fflate";
-import { unstable_cache } from "next/cache";
 import marketStats from "@/data/kaohsiung-market-stats.json";
-import { fetchKcgVolumeStatistics } from "@/lib/kcg-volume-statistics";
 import { getRedis } from "@/lib/redis";
 
 export type MarketStats = typeof marketStats;
+type KcgVolumeStatistics = MarketStats["latestVolumeStatistics"];
 
 type VolumeCategory = "apartment" | "building" | "elevatorApartment" | "townhouse" | "land";
 
@@ -13,22 +12,6 @@ const CURRENT_DATA_URL =
 const MARKET_STATS_CACHE_KEY = "juhong:homepage:kaohsiung-market-stats";
 const KAOHSIUNG_MAIN_FILE = "e_lvr_land_a.csv";
 const PING_PER_SQUARE_METER = 0.3025;
-const LIVE_MARKET_REVALIDATE_SECONDS = 60 * 60 * 24;
-
-const getCachedLiveMarketStats = unstable_cache(
-  async () => {
-    const targetMonth = getLatestClosedMonth();
-    const [latest, latestVolumeStatistics] = await Promise.all([
-      fetchCurrentMonthStats(targetMonth),
-      fetchKcgVolumeStatistics(),
-    ]);
-
-    return buildNextMarketStats(marketStats, targetMonth, latest, latestVolumeStatistics);
-  },
-  ["juhong-homepage-live-market-stats"],
-  { revalidate: LIVE_MARKET_REVALIDATE_SECONDS },
-);
-
 function getLatestClosedMonth(now = new Date()) {
   const closed = new Date(Date.UTC(now.getFullYear(), now.getMonth() - 1, 1));
 
@@ -218,11 +201,17 @@ async function getStoredMarketStats(): Promise<MarketStats> {
   return marketStats;
 }
 
+async function fetchLatestVolumeStatistics(): Promise<KcgVolumeStatistics> {
+  const { fetchKcgVolumeStatistics } = await import("@/lib/kcg-volume-statistics");
+
+  return fetchKcgVolumeStatistics();
+}
+
 function buildNextMarketStats(
   currentStats: MarketStats,
   targetMonth: string,
   latest: Awaited<ReturnType<typeof fetchCurrentMonthStats>>,
-  latestVolumeStatistics: Awaited<ReturnType<typeof fetchKcgVolumeStatistics>>,
+  latestVolumeStatistics: KcgVolumeStatistics,
 ) {
   const priceSeries = currentStats.priceSeries.filter((item) => item.month !== targetMonth);
 
@@ -236,24 +225,14 @@ function buildNextMarketStats(
 }
 
 export async function getMarketStats(): Promise<MarketStats> {
-  const storedStats = await getStoredMarketStats();
-
-  if (getRedis()) {
-    return storedStats;
-  }
-
-  try {
-    return await getCachedLiveMarketStats();
-  } catch {
-    return storedStats;
-  }
+  return getStoredMarketStats();
 }
 
 export async function refreshMarketStats() {
   const targetMonth = getLatestClosedMonth();
   const [latest, latestVolumeStatistics] = await Promise.all([
     fetchCurrentMonthStats(targetMonth),
-    fetchKcgVolumeStatistics(),
+    fetchLatestVolumeStatistics(),
   ]);
   const currentStats = await getStoredMarketStats();
   const nextStats = buildNextMarketStats(currentStats, targetMonth, latest, latestVolumeStatistics);
