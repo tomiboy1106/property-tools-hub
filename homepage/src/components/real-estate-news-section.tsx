@@ -36,7 +36,7 @@ export async function RealEstateNewsSection() {
           ))}
         </div>
         <p className="news-source-note">
-          新聞來源：自由時報地產天下等公開新聞頁面；本站僅整理高雄或全台性不動產新聞標題與簡短重點，不轉載新聞全文。
+          新聞來源：壹蘋新聞網地產王、自由時報地產天下等公開新聞頁面；本站僅整理高雄或全台性不動產新聞標題與簡短重點，不轉載新聞全文。
         </p>
       </div>
     </section>

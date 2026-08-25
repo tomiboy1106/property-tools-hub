@@ -10,11 +10,13 @@ export type RealEstateNewsItem = {
 
 const NEWS_CACHE_KEY = "juhong:homepage:real-estate-news";
 const NEWS_REVALIDATE_SECONDS = 60 * 60;
-const NEWS_PAGES = [
+const LTN_NEWS_PAGES = [
   "https://estate.ltn.com.tw/news",
   "https://estate.ltn.com.tw/thinking",
   "https://estate.ltn.com.tw/",
 ];
+const NEXT_APPLE_PROPERTY_PAGE = "https://news.nextapple.com/realtime/property";
+const NEXT_APPLE_PROPERTY_RSS = "https://news.nextapple.com/api/rss/category/property";
 
 const fallbackNews: RealEstateNewsItem[] = [
   {
@@ -225,8 +227,21 @@ function readJsonString(html: string, key: string) {
   }
 }
 
+function readXmlTag(xml: string, tagName: string) {
+  const escapedTagName = tagName.replace(":", "\\:");
+  const match = xml.match(new RegExp(`<${escapedTagName}[^>]*>([\\s\\S]*?)<\\/${escapedTagName}>`, "i"));
+
+  return stripHtml(match?.[1] ?? "");
+}
+
 function trimSummary(value: string) {
   return value.length > 88 ? `${value.slice(0, 88)}…` : value;
+}
+
+function getPublishedTime(value: string) {
+  const time = new Date(value).getTime();
+
+  return Number.isFinite(time) ? time : 0;
 }
 
 function isKaohsiungNews(item: Pick<RealEstateNewsItem, "title" | "summary">) {
@@ -302,6 +317,27 @@ function parseLtnListPage(html: string, pageUrl: string) {
     .filter((item) => item.title && item.url);
 }
 
+function parseNextAppleRss(xml: string) {
+  const items = xml.match(/<item>[\s\S]*?<\/item>/gi) ?? [];
+
+  return items
+    .map((item) => {
+      const title = readXmlTag(item, "title");
+      const summary = readXmlTag(item, "description");
+      const url = readXmlTag(item, "link");
+      const publishedAt = formatPublishedAt(readXmlTag(item, "pubDate"));
+
+      return {
+        title,
+        summary: trimSummary(summary),
+        source: "壹蘋新聞網",
+        url,
+        publishedAt,
+      };
+    })
+    .filter((item) => item.title && item.url);
+}
+
 async function fetchArticleDetail(item: RealEstateNewsItem) {
   try {
     const response = await fetch(item.url, {
@@ -331,9 +367,9 @@ async function fetchArticleDetail(item: RealEstateNewsItem) {
   }
 }
 
-async function fetchNewsFromPages() {
+async function fetchLtnNews() {
   const results = await Promise.allSettled(
-    NEWS_PAGES.map(async (pageUrl) => {
+    LTN_NEWS_PAGES.map(async (pageUrl) => {
       const response = await fetch(pageUrl, {
         next: { revalidate: NEWS_REVALIDATE_SECONDS },
         headers: {
@@ -349,6 +385,30 @@ async function fetchNewsFromPages() {
     }),
   );
 
+  return results.flatMap((result) => (result.status === "fulfilled" ? result.value : []));
+}
+
+async function fetchNextAppleNews() {
+  const response = await fetch(NEXT_APPLE_PROPERTY_RSS, {
+    next: { revalidate: NEWS_REVALIDATE_SECONDS },
+    headers: {
+      referer: NEXT_APPLE_PROPERTY_PAGE,
+      "user-agent": "Mozilla/5.0 JuhongHomepage/1.0",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Next Apple RSS fetch failed: ${response.status}`);
+  }
+
+  return parseNextAppleRss(await response.text());
+}
+
+async function fetchNewsFromPages() {
+  const results = await Promise.allSettled(
+    [fetchNextAppleNews(), fetchLtnNews()],
+  );
+
   const seen = new Set<string>();
   const candidates = results
     .flatMap((result) => (result.status === "fulfilled" ? result.value : []))
@@ -362,8 +422,16 @@ async function fetchNewsFromPages() {
       seen.add(key);
       return isAllowedNews(item);
     })
-    .sort((first, second) => newsPriority(second) - newsPriority(first))
-    .slice(0, 8);
+    .sort((first, second) => {
+      const priorityDifference = newsPriority(second) - newsPriority(first);
+
+      if (priorityDifference !== 0) {
+        return priorityDifference;
+      }
+
+      return getPublishedTime(second.publishedAt) - getPublishedTime(first.publishedAt);
+    })
+    .slice(0, 12);
   const enriched = await Promise.all(candidates.map(fetchArticleDetail));
 
   return enriched
@@ -375,7 +443,7 @@ async function fetchNewsFromPages() {
         return priorityDifference;
       }
 
-      return new Date(second.publishedAt).getTime() - new Date(first.publishedAt).getTime();
+      return getPublishedTime(second.publishedAt) - getPublishedTime(first.publishedAt);
     })
     .slice(0, 3);
 }
