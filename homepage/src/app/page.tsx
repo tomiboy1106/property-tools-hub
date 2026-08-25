@@ -16,6 +16,8 @@ import { TeamIntroduction } from "@/components/team-introduction";
 import { ToolCard } from "@/components/tool-card";
 import { toolLinks } from "@/config/tool-links";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   return (
     <>

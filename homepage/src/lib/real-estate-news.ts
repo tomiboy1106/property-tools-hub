@@ -213,6 +213,20 @@ function formatPublishedAt(value: string) {
     .replaceAll("/", "-");
 }
 
+async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, {
+      ...init,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function readJsonString(html: string, key: string) {
   const match = html.match(new RegExp(`"${key}"\\s*:\\s*"((?:\\\\.|[^"\\\\])*)"`, "i"));
 
@@ -339,13 +353,17 @@ function parseNextAppleRss(xml: string) {
 }
 
 async function fetchArticleDetail(item: RealEstateNewsItem) {
+  if (item.source === "壹蘋新聞網") {
+    return item;
+  }
+
   try {
-    const response = await fetch(item.url, {
+    const response = await fetchWithTimeout(item.url, {
       next: { revalidate: NEWS_REVALIDATE_SECONDS },
       headers: {
         "user-agent": "Mozilla/5.0 JuhongHomepage/1.0",
       },
-    });
+    }, 6000);
 
     if (!response.ok) {
       return item;
@@ -370,12 +388,12 @@ async function fetchArticleDetail(item: RealEstateNewsItem) {
 async function fetchLtnNews() {
   const results = await Promise.allSettled(
     LTN_NEWS_PAGES.map(async (pageUrl) => {
-      const response = await fetch(pageUrl, {
+      const response = await fetchWithTimeout(pageUrl, {
         next: { revalidate: NEWS_REVALIDATE_SECONDS },
         headers: {
           "user-agent": "Mozilla/5.0 JuhongHomepage/1.0",
         },
-      });
+      }, 8000);
 
       if (!response.ok) {
         throw new Error(`News page fetch failed: ${response.status}`);
@@ -389,13 +407,13 @@ async function fetchLtnNews() {
 }
 
 async function fetchNextAppleNews() {
-  const response = await fetch(NEXT_APPLE_PROPERTY_RSS, {
+  const response = await fetchWithTimeout(NEXT_APPLE_PROPERTY_RSS, {
     next: { revalidate: NEWS_REVALIDATE_SECONDS },
     headers: {
       referer: NEXT_APPLE_PROPERTY_PAGE,
       "user-agent": "Mozilla/5.0 JuhongHomepage/1.0",
     },
-  });
+  }, 8000);
 
   if (!response.ok) {
     throw new Error(`Next Apple RSS fetch failed: ${response.status}`);
