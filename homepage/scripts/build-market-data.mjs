@@ -8,7 +8,7 @@ const CURRENT_DATA_URL =
   "https://plvr.land.moi.gov.tw/Download?fileName=lvr_landcsv.zip&type=zip";
 const SEASON_DATA_URL = (season) =>
   `https://plvr.land.moi.gov.tw/DownloadSeason?season=${season}&type=zip&fileName=lvr_landcsv.zip`;
-const SOURCE_PAGE_URL = "https://data.gov.tw/dataset/77051";
+const SOURCE_PAGE_URL = "https://lvr.land.moi.gov.tw/";
 const KCG_VOLUME_INDEX_URL = "https://landp.kcg.gov.tw/News/2556/";
 const KCG_VOLUME_ORIGIN = "https://landp.kcg.gov.tw";
 const TARGET_REPORT_NAME = "高雄市不動產買賣交易類型件數統計";
@@ -18,6 +18,7 @@ const KAOHSIUNG_MAIN_FILE = "e_lvr_land_a.csv";
 const START_YEAR = 2015;
 const START_ROC_YEAR = 104;
 const PING_PER_SQUARE_METER = 0.3025;
+const MIN_RELIABLE_PRICE_TRANSACTIONS = 800;
 
 function getLatestClosedMonth(now = new Date()) {
   const year = now.getFullYear();
@@ -335,6 +336,18 @@ function createMonthRange(startMonth, endMonth) {
   return months;
 }
 
+function getReliablePriceEndMonth(priceSeries) {
+  const reliable = [...priceSeries]
+    .reverse()
+    .find((item) => item.averagePricePerPing !== null && item.transactions >= MIN_RELIABLE_PRICE_TRANSACTIONS);
+
+  if (!reliable) {
+    throw new Error("No reliable price month was found");
+  }
+
+  return reliable.month;
+}
+
 function parseMarketCsv(csvText, aggregates, endMonth) {
   const rows = parseCsv(csvText);
   const header = rows[0];
@@ -440,7 +453,7 @@ async function buildMarketData() {
   }
 
   const months = createMonthRange(`${START_YEAR}-01`, latestClosedMonth);
-  const priceSeries = months.map((month) => {
+  const rawPriceSeries = months.map((month) => {
     const aggregate = aggregates.price.get(month);
 
     return {
@@ -452,6 +465,16 @@ async function buildMarketData() {
       transactions: aggregate?.count ?? 0,
     };
   });
+  const reliablePriceEndMonth = getReliablePriceEndMonth(rawPriceSeries);
+  const priceSeries = rawPriceSeries.filter((item) => item.month <= reliablePriceEndMonth);
+  const excludedIncompletePriceMonths = rawPriceSeries
+    .filter((item) => item.month > reliablePriceEndMonth)
+    .map((item) => ({
+      month: item.month,
+      averagePricePerPing: item.averagePricePerPing,
+      transactions: item.transactions,
+      reason: `樣本數低於 ${MIN_RELIABLE_PRICE_TRANSACTIONS} 筆，暫不列入平均單價圖表`,
+    }));
 
   const volumeSeries = months.map((month) => ({
     month,
@@ -469,11 +492,14 @@ async function buildMarketData() {
     sourceUrl: SOURCE_PAGE_URL,
     generatedAt: new Date().toISOString(),
     periodStart: `${START_YEAR}-01`,
-    periodEnd: latestClosedMonth,
+    periodEnd: reliablePriceEndMonth,
+    rawDataPeriodEnd: latestClosedMonth,
+    minimumReliablePriceTransactions: MIN_RELIABLE_PRICE_TRANSACTIONS,
     methodology:
-      "平均單價取高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；成交量採高雄市政府地政局月報 PDF「總計」列，素地對應土地。",
+      "平均單價取內政部實價登錄高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；最新月份若樣本數低於 800 筆，視為揭露尚未完整，暫不列入平均單價圖表；成交量採高雄市政府地政局月報 PDF「總計」列，素地對應土地。",
     processedFiles: processed,
     priceSeries,
+    excludedIncompletePriceMonths,
     volumeSeries,
     latestVolumeStatistics,
   };

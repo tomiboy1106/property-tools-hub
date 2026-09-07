@@ -12,6 +12,7 @@ const CURRENT_DATA_URL =
 const MARKET_STATS_CACHE_KEY = "juhong:homepage:kaohsiung-market-stats";
 const KAOHSIUNG_MAIN_FILE = "e_lvr_land_a.csv";
 const PING_PER_SQUARE_METER = 0.3025;
+const MIN_RELIABLE_PRICE_TRANSACTIONS = 800;
 function getLatestClosedMonth(now = new Date()) {
   const closed = new Date(Date.UTC(now.getFullYear(), now.getMonth() - 1, 1));
 
@@ -213,13 +214,30 @@ function buildNextMarketStats(
   latest: Awaited<ReturnType<typeof fetchCurrentMonthStats>>,
   latestVolumeStatistics: KcgVolumeStatistics,
 ) {
-  const priceSeries = currentStats.priceSeries.filter((item) => item.month !== targetMonth);
+  const isReliablePriceMonth = latest.price.transactions >= MIN_RELIABLE_PRICE_TRANSACTIONS;
+  const priceSeries = isReliablePriceMonth
+    ? [
+        ...currentStats.priceSeries.filter((item) => item.month !== targetMonth),
+        latest.price,
+      ].sort((first, second) => first.month.localeCompare(second.month))
+    : currentStats.priceSeries;
 
   return {
     ...currentStats,
     generatedAt: new Date().toISOString(),
-    periodEnd: targetMonth,
-    priceSeries: [...priceSeries, latest.price],
+    periodEnd: isReliablePriceMonth ? targetMonth : currentStats.periodEnd,
+    rawDataPeriodEnd: targetMonth,
+    minimumReliablePriceTransactions: MIN_RELIABLE_PRICE_TRANSACTIONS,
+    priceSeries,
+    excludedIncompletePriceMonths: isReliablePriceMonth
+      ? currentStats.excludedIncompletePriceMonths?.filter((item) => item.month !== targetMonth) ?? []
+      : [
+          ...(currentStats.excludedIncompletePriceMonths?.filter((item) => item.month !== targetMonth) ?? []),
+          {
+            ...latest.price,
+            reason: `樣本數低於 ${MIN_RELIABLE_PRICE_TRANSACTIONS} 筆，暫不列入平均單價圖表`,
+          },
+        ].sort((first, second) => first.month.localeCompare(second.month)),
     latestVolumeStatistics,
   };
 }
