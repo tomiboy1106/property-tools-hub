@@ -40,12 +40,23 @@ function getSeasons(latestClosedMonth) {
   return seasons;
 }
 
-async function downloadZip(name, url) {
+function isZipBuffer(buffer) {
+  return buffer[0] === 0x50 && buffer[1] === 0x4b;
+}
+
+async function downloadZip(name, url, options = {}) {
+  const useCache = options.useCache ?? true;
   await mkdir(CACHE_DIR, { recursive: true });
   const cachePath = path.join(CACHE_DIR, `${name}.zip`);
 
-  if (existsSync(cachePath)) {
-    return readFile(cachePath);
+  if (useCache && existsSync(cachePath)) {
+    const cachedBuffer = await readFile(cachePath);
+
+    if (isZipBuffer(cachedBuffer)) {
+      return cachedBuffer;
+    }
+
+    console.warn(`Ignoring invalid cached zip: ${name}`);
   }
 
   const response = await fetch(url);
@@ -55,7 +66,11 @@ async function downloadZip(name, url) {
   }
 
   const buffer = Buffer.from(await response.arrayBuffer());
-  await writeFile(cachePath, buffer);
+
+  if (isZipBuffer(buffer)) {
+    await writeFile(cachePath, buffer);
+  }
+
   return buffer;
 }
 
@@ -414,7 +429,7 @@ async function buildMarketData() {
   }
 
   try {
-    const currentBuffer = await downloadZip("current", CURRENT_DATA_URL);
+    const currentBuffer = await downloadZip("current", CURRENT_DATA_URL, { useCache: false });
     const didParse = await parseZip(currentBuffer, aggregates, latestClosedMonth);
 
     if (didParse) {
