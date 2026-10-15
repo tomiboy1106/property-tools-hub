@@ -11,6 +11,10 @@ const SEASON_DATA_URL = (season) =>
 const SOURCE_PAGE_URL = "https://lvr.land.moi.gov.tw/";
 const KCG_VOLUME_INDEX_URL = "https://landp.kcg.gov.tw/News/2556/";
 const KCG_VOLUME_ORIGIN = "https://landp.kcg.gov.tw";
+const KCG_BUILDING_TRANSFER_DATASET_URL = "https://data.gov.tw/dataset/177280";
+const BUILDING_TRANSFER_REFERENCE_URL = "https://www.taiwanhouse.org.tw/a/blogs/show/3092702";
+const KCG_BUILDING_TRANSFER_RESOURCE_PATTERN =
+  /高雄市不動產買賣統計\((\d{3})年(\d{2})月\)","(https:\\u002F\\u002Fopenapi\.kcg\.gov\.tw\\u002FApi\\u002FService\\u002FGet\\u002F[0-9a-f-]+)"/gi;
 const TARGET_REPORT_NAME = "高雄市不動產買賣交易類型件數統計";
 const CACHE_DIR = path.join(process.cwd(), ".market-data-cache");
 const OUTPUT_PATH = path.join(process.cwd(), "src", "data", "kaohsiung-market-stats.json");
@@ -228,6 +232,62 @@ async function fetchKcgVolumeStatistics() {
     ...latestReport,
     pdfUrl,
   });
+}
+
+async function fetchKcgBuildingTransferStatistics() {
+  const response = await fetch(KCG_BUILDING_TRANSFER_DATASET_URL, {
+    cache: "no-store",
+    headers: {
+      "user-agent": "JuhongHomepage/1.0",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`KCG building transfer dataset fetch failed: ${response.status}`);
+  }
+
+  const html = await response.text();
+  const resources = Array.from(html.matchAll(KCG_BUILDING_TRANSFER_RESOURCE_PATTERN), (match) => ({
+    month: `${Number(match[1]) + 1911}-${match[2]}`,
+    dataUrl: match[3].replaceAll("\\u002F", "/"),
+  })).sort((first, second) => second.month.localeCompare(first.month));
+  const latestResource = resources[0];
+
+  if (!latestResource) {
+    throw new Error("KCG latest building transfer resource was not found");
+  }
+
+  const dataResponse = await fetch(latestResource.dataUrl, {
+    cache: "no-store",
+    headers: {
+      "user-agent": "JuhongHomepage/1.0",
+    },
+  });
+
+  if (!dataResponse.ok) {
+    throw new Error(`KCG building transfer data fetch failed: ${dataResponse.status}`);
+  }
+
+  const payload = await dataResponse.json();
+  const total = payload.data?.reduce((sum, row) => sum + Number(row["建物棟數"] ?? 0), 0) ?? 0;
+
+  if (!payload.success || total <= 0) {
+    throw new Error("KCG building transfer data was empty or invalid");
+  }
+
+  return {
+    city: "高雄市",
+    month: latestResource.month,
+    total,
+    sourceName: "高雄市政府地政局不動產買賣統計",
+    sourceUrl: KCG_BUILDING_TRANSFER_DATASET_URL,
+    sourceDataUrl: latestResource.dataUrl,
+    referenceName: "內政部全國建物買賣移轉棟數統計資料頁",
+    referenceUrl: BUILDING_TRANSFER_REFERENCE_URL,
+    unit: "棟",
+    updatedAt: new Date().toISOString(),
+    note: "高雄市各行政區建物棟數加總；產品分類月報另依高雄市政府地政局最新公告月份呈現。",
+  };
 }
 
 function parseCsv(text) {
@@ -484,7 +544,10 @@ async function buildMarketData() {
     townhouse: aggregates.volume.get(month)?.townhouse ?? 0,
     land: aggregates.volume.get(month)?.land ?? 0,
   }));
-  const latestVolumeStatistics = await fetchKcgVolumeStatistics();
+  const [latestVolumeStatistics, latestBuildingTransfer] = await Promise.all([
+    fetchKcgVolumeStatistics(),
+    fetchKcgBuildingTransferStatistics(),
+  ]);
 
   const output = {
     city: "高雄市",
@@ -496,11 +559,12 @@ async function buildMarketData() {
     rawDataPeriodEnd: latestClosedMonth,
     minimumReliablePriceTransactions: MIN_RELIABLE_PRICE_TRANSACTIONS,
     methodology:
-      "平均單價取內政部實價登錄高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；最新月份若樣本數低於 800 筆，視為揭露尚未完整，暫不列入平均單價圖表；成交量採高雄市政府地政局月報 PDF「總計」列，素地對應土地。",
+      "平均單價取內政部實價登錄高雄市買賣案件主檔，住宅大樓、華廈、公寓、透天厝列入房屋均價，單價元/平方公尺換算為萬元/坪；最新月份若樣本數低於 800 筆，視為揭露尚未完整，暫不列入平均單價圖表；產品分類採高雄市政府地政局不動產買賣交易類型月報 PDF，素地對應土地。",
     processedFiles: processed,
     priceSeries,
     excludedIncompletePriceMonths,
     volumeSeries,
+    latestBuildingTransfer,
     latestVolumeStatistics,
   };
 

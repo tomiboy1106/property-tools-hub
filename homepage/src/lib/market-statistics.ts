@@ -4,6 +4,7 @@ import { getRedis } from "@/lib/redis";
 
 export type MarketStats = typeof marketStats;
 type KcgVolumeStatistics = MarketStats["latestVolumeStatistics"];
+type KcgBuildingTransferStatistics = MarketStats["latestBuildingTransfer"];
 
 type VolumeCategory = "apartment" | "building" | "elevatorApartment" | "townhouse" | "land";
 
@@ -194,7 +195,11 @@ async function getStoredMarketStats(): Promise<MarketStats> {
   if (redis) {
     const cached = await redis.get<MarketStats>(MARKET_STATS_CACHE_KEY);
 
-    if (cached?.priceSeries?.length && cached?.latestVolumeStatistics) {
+    if (
+      cached?.priceSeries?.length &&
+      cached?.latestVolumeStatistics &&
+      cached?.latestBuildingTransfer
+    ) {
       return cached;
     }
   }
@@ -208,11 +213,18 @@ async function fetchLatestVolumeStatistics(): Promise<KcgVolumeStatistics> {
   return fetchKcgVolumeStatistics();
 }
 
+async function fetchLatestBuildingTransfer(): Promise<KcgBuildingTransferStatistics> {
+  const { fetchLatestKcgBuildingTransfer } = await import("@/lib/kcg-building-transfer");
+
+  return fetchLatestKcgBuildingTransfer();
+}
+
 function buildNextMarketStats(
   currentStats: MarketStats,
   targetMonth: string,
   latest: Awaited<ReturnType<typeof fetchCurrentMonthStats>>,
   latestVolumeStatistics: KcgVolumeStatistics,
+  latestBuildingTransfer: KcgBuildingTransferStatistics,
 ) {
   const isReliablePriceMonth = latest.price.transactions >= MIN_RELIABLE_PRICE_TRANSACTIONS;
   const priceSeries = isReliablePriceMonth
@@ -239,6 +251,7 @@ function buildNextMarketStats(
           },
         ].sort((first, second) => first.month.localeCompare(second.month)),
     latestVolumeStatistics,
+    latestBuildingTransfer,
   };
 }
 
@@ -248,12 +261,19 @@ export async function getMarketStats(): Promise<MarketStats> {
 
 export async function refreshMarketStats() {
   const targetMonth = getLatestClosedMonth();
-  const [latest, latestVolumeStatistics] = await Promise.all([
+  const [latest, latestVolumeStatistics, latestBuildingTransfer] = await Promise.all([
     fetchCurrentMonthStats(targetMonth),
     fetchLatestVolumeStatistics(),
+    fetchLatestBuildingTransfer(),
   ]);
   const currentStats = await getStoredMarketStats();
-  const nextStats = buildNextMarketStats(currentStats, targetMonth, latest, latestVolumeStatistics);
+  const nextStats = buildNextMarketStats(
+    currentStats,
+    targetMonth,
+    latest,
+    latestVolumeStatistics,
+    latestBuildingTransfer,
+  );
   const redis = getRedis();
 
   if (redis) {

@@ -25,6 +25,14 @@ type VolumePoint = {
   sourceFileName?: string;
 };
 
+type BuildingTransferPoint = {
+  month: string;
+  total: number;
+  sourceUrl: string;
+  referenceUrl: string;
+  unit: string;
+};
+
 function formatMonth(month: string) {
   const [year, monthNumber] = month.split("-");
   return `${year}/${Number(monthNumber)}`;
@@ -41,7 +49,13 @@ function formatUpdatedAt(value: string) {
     .replaceAll("/", "-");
 }
 
-function LatestVolumeBars({ latest }: { latest: VolumePoint }) {
+function LatestVolumeBars({
+  latest,
+  buildingTransfer,
+}: {
+  latest: VolumePoint;
+  buildingTransfer: BuildingTransferPoint;
+}) {
   const values = volumeCategories.map((category) => ({
     ...category,
     value: Number(latest[category.key]),
@@ -56,12 +70,26 @@ function LatestVolumeBars({ latest }: { latest: VolumePoint }) {
           <BarChart3 size={19} aria-hidden="true" />
         </span>
         <div>
-          <h3>{formatMonth(latest.month)} 最新不動產成交量</h3>
+          <h3>{formatMonth(buildingTransfer.month)} 建物買賣移轉量</h3>
           <p>
-            依高雄市地政局月報統計，當月總計 <strong>{total.toLocaleString("zh-TW")} 筆</strong>。
+            依建物買賣移轉登記統計，呈現高雄市最新市場量體。
           </p>
         </div>
       </figcaption>
+      <div
+        className="latest-transfer-summary"
+        aria-label={`${formatMonth(buildingTransfer.month)} 高雄市建物買賣移轉 ${buildingTransfer.total} 棟`}
+      >
+        <div>
+          <strong>{buildingTransfer.total.toLocaleString("zh-TW")}</strong>
+          <span>{buildingTransfer.unit}</span>
+        </div>
+        <p>高雄市政府地政局最新官方資料</p>
+      </div>
+      <div className="latest-volume-period">
+        <strong>{formatMonth(latest.month)} 產品分類</strong>
+        <span>高雄市地政局最新已公布資料，共 {total.toLocaleString("zh-TW")} 件</span>
+      </div>
       <div className="latest-volume-bars" role="img" aria-label={`${formatMonth(latest.month)} 高雄市不動產成交量五分類柱狀圖`}>
         {values.map((item) => (
           <div className="latest-volume-item" key={item.key}>
@@ -95,6 +123,7 @@ function LatestVolumeBars({ latest }: { latest: VolumePoint }) {
 export async function MarketInsightsSection() {
   const stats = await getMarketStats();
   const latestVolume = stats.latestVolumeStatistics;
+  const latestBuildingTransfer = stats.latestBuildingTransfer;
 
   return (
     <section id="market" className="section market-section" aria-labelledby="market-title">
@@ -115,17 +144,25 @@ export async function MarketInsightsSection() {
             </a>
             {latestVolume?.sourceUrl && (
               <a href={latestVolume.sourceUrl} target="_blank" rel="noopener noreferrer">
-                成交量月報來源
+                產品分類月報來源
               </a>
             )}
+            <a href={latestBuildingTransfer.sourceUrl} target="_blank" rel="noopener noreferrer">
+              9 月官方移轉資料
+            </a>
+            <a href={latestBuildingTransfer.referenceUrl} target="_blank" rel="noopener noreferrer">
+              全國移轉統計參考
+            </a>
           </div>
         </div>
         <div className="market-chart-grid">
           <MarketPriceChart data={stats.priceSeries} />
-          {latestVolume && <LatestVolumeBars latest={latestVolume} />}
+          {latestVolume && latestBuildingTransfer && (
+            <LatestVolumeBars latest={latestVolume} buildingTransfer={latestBuildingTransfer} />
+          )}
         </div>
         <p className="market-method-note">
-          {stats.methodology} 圖表僅顯示最新月份五類主要產品。
+          {stats.methodology} 建物移轉總量與產品分類來自不同統計表，月份依各來源最新公告分別標示，兩者不直接相加比較。
         </p>
       </div>
     </section>
