@@ -13,6 +13,7 @@ export function SiteFooter() {
             <Phone size={15} aria-hidden="true" />
             (07)-7779365
           </a>
+          <p className="broker-license">經紀人(114)高市字第01701號 黃俊銘</p>
         </div>
         <p className="footer-copyright">
           © {new Date().getFullYear()} 岠鋐不動產事業
