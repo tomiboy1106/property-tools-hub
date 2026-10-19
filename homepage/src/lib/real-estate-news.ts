@@ -8,8 +8,9 @@ export type RealEstateNewsItem = {
   publishedAt: string;
 };
 
-const NEWS_CACHE_KEY = "juhong:homepage:real-estate-news";
+const NEWS_CACHE_KEY = "juhong:homepage:real-estate-news:v3";
 const NEWS_REVALIDATE_SECONDS = 60 * 60;
+const NEWS_STALE_AFTER_MS = 48 * 60 * 60 * 1000;
 const LTN_NEWS_PAGES = [
   "https://estate.ltn.com.tw/news",
   "https://estate.ltn.com.tw/thinking",
@@ -111,6 +112,7 @@ const NATIONWIDE_KEYWORDS = [
 
 const OTHER_LOCAL_MARKET_KEYWORDS = [
   "台中",
+  "臺中",
   "北屯",
   "西屯",
   "七期",
@@ -129,6 +131,7 @@ const OTHER_LOCAL_MARKET_KEYWORDS = [
   "三峽",
   "鶯歌",
   "台北",
+  "臺北",
   "北市",
   "雙北",
   "桃園",
@@ -141,6 +144,7 @@ const OTHER_LOCAL_MARKET_KEYWORDS = [
   "新竹",
   "竹北",
   "台南",
+  "臺南",
   "嘉義",
   "雲林",
   "彰化",
@@ -148,6 +152,7 @@ const OTHER_LOCAL_MARKET_KEYWORDS = [
   "宜蘭",
   "花蓮",
   "台東",
+  "臺東",
   "屏東",
   "基隆",
   "南投",
@@ -190,6 +195,43 @@ function stripHtml(value: string) {
 
 function normalizeTitle(value: string) {
   return value.replace(/\s+/g, "").replace(/[｜|:：!-]/g, "").toLowerCase();
+}
+
+function normalizeNewsText(value: string) {
+  return value.replace(/[\s，。！？、；：「」『』（）()【】\-]/g, "").toLowerCase();
+}
+
+function getTextSimilarity(first: string, second: string) {
+  const firstText = normalizeNewsText(first);
+  const secondText = normalizeNewsText(second);
+
+  if (firstText.length < 12 || secondText.length < 12) {
+    return 0;
+  }
+
+  const getChunks = (value: string) => {
+    const chunks = new Set<string>();
+
+    for (let index = 0; index <= value.length - 3; index += 1) {
+      chunks.add(value.slice(index, index + 3));
+    }
+
+    return chunks;
+  };
+  const firstChunks = getChunks(firstText);
+  const secondChunks = getChunks(secondText);
+  const sharedCount = [...firstChunks].filter((chunk) => secondChunks.has(chunk)).length;
+
+  return sharedCount / Math.min(firstChunks.size, secondChunks.size);
+}
+
+function removeDuplicateNews(items: RealEstateNewsItem[]) {
+  return items.filter((item, index, allItems) =>
+    allItems.slice(0, index).every((existingItem) =>
+      normalizeTitle(existingItem.title) !== normalizeTitle(item.title) &&
+      getTextSimilarity(existingItem.summary, item.summary) < 0.62,
+    ),
+  );
 }
 
 function formatPublishedAt(value: string) {
@@ -253,7 +295,10 @@ function trimSummary(value: string) {
 }
 
 function getPublishedTime(value: string) {
-  const time = new Date(value).getTime();
+  const normalizedValue = /^\d{4}-\d{2}-\d{2}$/.test(value)
+    ? `${value}T23:59:59+08:00`
+    : value;
+  const time = new Date(normalizedValue).getTime();
 
   return Number.isFinite(time) ? time : 0;
 }
@@ -270,7 +315,15 @@ function isNationwideNews(item: Pick<RealEstateNewsItem, "title" | "summary">) {
   return NATIONWIDE_KEYWORDS.some((keyword) => text.includes(keyword));
 }
 
-function isOtherLocalOnlyNews(item: Pick<RealEstateNewsItem, "title" | "summary">) {
+function isNationwideHeadline(item: Pick<RealEstateNewsItem, "title">) {
+  return NATIONWIDE_KEYWORDS.some((keyword) => item.title.includes(keyword));
+}
+
+function isOtherLocalTitle(item: Pick<RealEstateNewsItem, "title">) {
+  return OTHER_LOCAL_MARKET_KEYWORDS.some((keyword) => item.title.includes(keyword));
+}
+
+function isOtherLocalNews(item: Pick<RealEstateNewsItem, "title" | "summary">) {
   const text = `${item.title} ${item.summary}`;
 
   return OTHER_LOCAL_MARKET_KEYWORDS.some((keyword) => text.includes(keyword));
@@ -295,7 +348,11 @@ function isAllowedNews(item: Pick<RealEstateNewsItem, "title" | "summary">) {
     return false;
   }
 
-  return !isOtherLocalOnlyNews(item);
+  if (isOtherLocalTitle(item)) {
+    return false;
+  }
+
+  return !isOtherLocalNews(item) || isNationwideHeadline(item);
 }
 
 function newsPriority(item: Pick<RealEstateNewsItem, "title" | "summary">) {
@@ -308,6 +365,28 @@ function newsPriority(item: Pick<RealEstateNewsItem, "title" | "summary">) {
   }
 
   return 0;
+}
+
+function compareNews(first: RealEstateNewsItem, second: RealEstateNewsItem) {
+  const publishedDifference = getPublishedTime(second.publishedAt) - getPublishedTime(first.publishedAt);
+
+  if (publishedDifference !== 0) {
+    return publishedDifference;
+  }
+
+  return newsPriority(second) - newsPriority(first);
+}
+
+function getNewsFreshness(items: RealEstateNewsItem[]) {
+  const newestItem = [...items].sort(compareNews)[0];
+  const newestPublishedTime = newestItem ? getPublishedTime(newestItem.publishedAt) : 0;
+
+  return {
+    newestPublishedAt: newestItem?.publishedAt || null,
+    stale:
+      newestPublishedTime === 0 ||
+      Date.now() - newestPublishedTime > NEWS_STALE_AFTER_MS,
+  };
 }
 
 function parseLtnListPage(html: string, pageUrl: string) {
@@ -428,7 +507,7 @@ async function fetchNewsFromPages() {
   );
 
   const seen = new Set<string>();
-  const candidates = results
+  const filteredCandidates = results
     .flatMap((result) => (result.status === "fulfilled" ? result.value : []))
     .filter((item) => {
       const key = normalizeTitle(item.title);
@@ -439,31 +518,20 @@ async function fetchNewsFromPages() {
 
       seen.add(key);
       return isAllowedNews(item);
-    })
-    .sort((first, second) => {
-      const priorityDifference = newsPriority(second) - newsPriority(first);
-
-      if (priorityDifference !== 0) {
-        return priorityDifference;
-      }
-
-      return getPublishedTime(second.publishedAt) - getPublishedTime(first.publishedAt);
-    })
-    .slice(0, 12);
+    });
+  const candidates = [
+    ...filteredCandidates
+      .filter((item) => getPublishedTime(item.publishedAt) > 0)
+      .sort(compareNews)
+      .slice(0, 12),
+    ...filteredCandidates
+      .filter((item) => getPublishedTime(item.publishedAt) === 0)
+      .sort((first, second) => newsPriority(second) - newsPriority(first))
+      .slice(0, 12),
+  ];
   const enriched = await Promise.all(candidates.map(fetchArticleDetail));
 
-  return enriched
-    .filter(isAllowedNews)
-    .sort((first, second) => {
-      const priorityDifference = newsPriority(second) - newsPriority(first);
-
-      if (priorityDifference !== 0) {
-        return priorityDifference;
-      }
-
-      return getPublishedTime(second.publishedAt) - getPublishedTime(first.publishedAt);
-    })
-    .slice(0, 3);
+  return removeDuplicateNews(enriched.filter(isAllowedNews).sort(compareNews)).slice(0, 3);
 }
 
 function mergeWithFallback(news: RealEstateNewsItem[]) {
@@ -486,7 +554,8 @@ function mergeWithFallback(news: RealEstateNewsItem[]) {
 
 export async function refreshRealEstateNews() {
   const news = await fetchNewsFromPages();
-  const safeNews = mergeWithFallback(news);
+  const safeNews = mergeWithFallback(news).sort(compareNews);
+  const freshness = getNewsFreshness(safeNews);
   const redis = getRedis();
 
   if (redis) {
@@ -496,6 +565,7 @@ export async function refreshRealEstateNews() {
   return {
     items: safeNews,
     stored: Boolean(redis),
+    ...freshness,
   };
 }
 
@@ -506,7 +576,7 @@ export async function getRealEstateNews() {
     const cached = await redis.get<RealEstateNewsItem[]>(NEWS_CACHE_KEY);
 
     if (cached?.length) {
-      const safeCachedNews = cached.filter(isAllowedNews).slice(0, 3);
+      const safeCachedNews = cached.filter(isAllowedNews).sort(compareNews).slice(0, 3);
 
       if (safeCachedNews.length >= 3) {
         return safeCachedNews;

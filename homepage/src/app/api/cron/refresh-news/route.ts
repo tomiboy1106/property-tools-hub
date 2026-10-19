@@ -11,10 +11,15 @@ export async function GET(request: Request) {
   const result = await refreshRealEstateNews();
   revalidatePath("/");
 
-  return NextResponse.json({
-    ok: true,
-    stored: result.stored,
-    count: result.items.length,
-    revalidated: true,
-  });
+  return NextResponse.json(
+    {
+      ok: !result.stale,
+      stored: result.stored,
+      count: result.items.length,
+      newestPublishedAt: result.newestPublishedAt,
+      stale: result.stale,
+      revalidated: true,
+    },
+    { status: result.stale ? 503 : 200 },
+  );
 }
