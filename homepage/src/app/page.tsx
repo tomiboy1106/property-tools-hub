@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { HeroVisual } from "@/components/hero-visual";
 import { CompanyIdentity } from "@/components/company-identity";
+import { LineFloatingWidget } from "@/components/line-floating-widget";
 import { MarketInsightsSection } from "@/components/market-insights-section";
 import { RealEstateNewsSection } from "@/components/real-estate-news-section";
 import { SiteFooter } from "@/components/site-footer";
@@ -111,6 +112,7 @@ export default async function Home() {
         </section>
       </main>
       <SiteFooter />
+      <LineFloatingWidget />
     </>
   );
 }
